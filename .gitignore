@@ -1,13 +1,4 @@
 
-
-# Binaries & build outputs
-FluentA.exe
-*.exe
-*.syso
-*.tar.gz
-*.deb
-dist/
-
 # Secret & local override files
 groq.txt
 *.key
