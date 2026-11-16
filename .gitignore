@@ -2,6 +2,7 @@
 FluentA.exe
 *.exe
 *.syso
+*.tar.gz
 dist/
 
 # Secret & local override files

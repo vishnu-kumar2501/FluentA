@@ -41,16 +41,6 @@ const (
 	trayMenuPause  = 205
 )
 
-// Config configures the Windows desktop hotkey and background watcher assistant.
-type Config struct {
-	Hotkey        string
-	DefaultMode   grammar.Mode
-	ModelName     string
-	WatchEnabled  bool
-	WatchDebounce time.Duration
-	WatchDebug    bool
-}
-
 // App manages the Windows system tray, global hotkey, background UIA watcher, clipboard capture, and WebView2 popup.
 type App struct {
 	checker     *grammar.Checker

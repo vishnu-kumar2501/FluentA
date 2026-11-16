@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=FluentA
+Comment=Fast, Private AI Writing & Grammar Assistant
+Exec=/usr/local/bin/fluenta-desktop
+Icon=fluenta
+Terminal=false
+Categories=Utility;Office;TextEditor;
+StartupNotify=true
+StartupWMClass=FluentA
+Keywords=grammar;spellcheck;ai;proofread;writing;

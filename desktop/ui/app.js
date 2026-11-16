@@ -178,6 +178,12 @@
     function postToHost(payload) {
       if (window.chrome && window.chrome.webview) {
         window.chrome.webview.postMessage(JSON.stringify(payload));
+      } else {
+        fetch("/api/message", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        }).catch((err) => console.error("postToHost error:", err));
       }
     }
 
@@ -2099,6 +2105,24 @@
         }
       }
     });
+
+    if (!window.chrome || !window.chrome.webview) {
+      try {
+        const sse = new EventSource("/api/events");
+        sse.onmessage = (e) => {
+          try {
+            const evt = JSON.parse(e.data);
+            if (window.__grammarApp && window.__grammarApp.onHostEvent) {
+              window.__grammarApp.onHostEvent(evt);
+            }
+          } catch (err) {
+            console.error("SSE message parse error:", err);
+          }
+        };
+      } catch (err) {
+        console.warn("SSE connection error:", err);
+      }
+    }
 
     resetUndoHistory();
     syncControls();

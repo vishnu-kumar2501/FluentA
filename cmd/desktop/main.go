@@ -1,4 +1,4 @@
-//go:build windows
+//go:build windows || linux
 
 //go:generate go run gen_rsrc.go
 
