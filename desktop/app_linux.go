@@ -26,6 +26,13 @@ func Run(ctx context.Context, checker *grammar.Checker, cfg Config) error {
 		return fmt.Errorf("create data directory %s: %w", dataDir, err)
 	}
 
+	closeLog, logErr := setupFileLogger(dataDir)
+	if logErr == nil && closeLog != nil {
+		defer closeLog()
+	} else if logErr != nil {
+		log.Printf("file logger warning: %v", logErr)
+	}
+
 	// Single instance enforcement
 	lockName := instanceMutexName(dataDir)
 	lock, err := acquireSingleInstance(lockName)

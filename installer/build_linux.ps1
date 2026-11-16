@@ -29,9 +29,10 @@ $deskPath = Join-Path $DistLinux "fluenta-desktop"
 go build -ldflags="-s -w" -o $deskPath (Join-Path $RootDir "cmd\desktop")
 
 # 3. Copy support files
-Write-Host "[3/3] Copying desktop entry, icons, and installer script..." -ForegroundColor Yellow
+Write-Host "[3/3] Copying desktop entry, icons, installer and uninstaller..." -ForegroundColor Yellow
 Copy-Item (Join-Path $RootDir "deploy\linux\fluenta.desktop") -Destination $DistLinux
 Copy-Item (Join-Path $RootDir "deploy\linux\install.sh") -Destination $DistLinux
+Copy-Item (Join-Path $RootDir "deploy\linux\uninstall.sh") -Destination $DistLinux
 Copy-Item (Join-Path $RootDir "desktop\ui\fluenta-logo.png") -Destination $DistLinux
 Copy-Item (Join-Path $RootDir "PRIVACY.md") -Destination $DistLinux
 
@@ -39,15 +40,12 @@ Copy-Item (Join-Path $RootDir "PRIVACY.md") -Destination $DistLinux
 Write-Host "Packaging dist\fluenta-linux-amd64.tar.gz..." -ForegroundColor Green
 tar -czf $ArchiveOut -C $DistLinux .
 
-# 5. Build native .deb installer
-Write-Host "Building native .deb package (fluenta_1.0.0_amd64.deb)..." -ForegroundColor Yellow
-$origEnvGoos = $env:GOOS
-$env:GOOS = "windows"
-go run (Join-Path $PSScriptRoot "build_deb.go")
-$env:GOOS = $origEnvGoos
+# Copy to docs/ for static site download
+$DocsArchive = Join-Path $RootDir "docs\fluenta-linux-amd64.tar.gz"
+Copy-Item $ArchiveOut -Destination $DocsArchive -Force
 
 $tarSize = (Get-Item $ArchiveOut).Length / 1MB
 $roundSize = [math]::Round($tarSize, 2)
-Write-Host "`nSUCCESS: Linux packages created:" -ForegroundColor Green
-Write-Host "  1. Universal Archive: $ArchiveOut ($roundSize MB)"
-Write-Host "  2. Debian/Ubuntu Package: $(Join-Path $RootDir 'dist\fluenta_1.0.0_amd64.deb')"
+Write-Host "`nSUCCESS: Linux package created:" -ForegroundColor Green
+Write-Host "  Universal Archive: $ArchiveOut ($roundSize MB)"
+Write-Host "  Copied to docs site: $DocsArchive"

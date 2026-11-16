@@ -18,6 +18,10 @@ install -m 755 fluenta-cli /usr/bin/fluenta
 install -m 755 fluenta-desktop /usr/bin/fluenta-desktop
 install -m 755 fluenta-cli /usr/local/bin/fluenta
 install -m 755 fluenta-desktop /usr/local/bin/fluenta-desktop
+if [ -f "uninstall.sh" ]; then
+  install -m 755 uninstall.sh /usr/bin/fluenta-uninstall
+  install -m 755 uninstall.sh /usr/local/bin/fluenta-uninstall
+fi
 echo "✓ Installed binaries to /usr/bin and /usr/local/bin"
 
 # 2. Install desktop shortcut
@@ -46,4 +50,5 @@ echo " FluentA installed successfully!"
 echo " - Run GUI Desktop App:   fluenta-desktop"
 echo " - Run CLI Proofreader:   fluenta \"your text here\""
 echo " - Active Selection Fix:  fluenta --selection --replace"
+echo " - To Uninstall:          sudo fluenta-uninstall (or sudo ./uninstall.sh)"
 echo "=========================================================="
