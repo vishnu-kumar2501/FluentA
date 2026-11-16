@@ -331,7 +331,7 @@
     <div class="container">
       <div class="download-box">
         <h2 class="download-title">Elevate your writing today.</h2>
-        <p class="download-subtitle">Fast, lightweight, native installers for Windows and Linux. Setup takes less than 30 seconds.</p>
+        <p class="download-subtitle">Fast, lightweight, native tools for Windows, Linux, and any Chromium browser.</p>
 
         <div style="display:flex; justify-content:center; gap:1rem; flex-wrap:wrap; margin-bottom:1.5rem;">
           <a href="FluentASetup.exe" download="FluentASetup.exe" class="btn btn-primary btn-lg">
@@ -348,10 +348,21 @@
             </svg>
             Download for Linux (.tar.gz)
           </a>
+
+          <a href="fluenta-browser-extension.zip" download="fluenta-browser-extension.zip" class="btn btn-secondary btn-lg">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <circle cx="12" cy="12" r="4"></circle>
+              <line x1="21.17" y1="8" x2="12" y2="8"></line>
+              <line x1="3.95" y1="6.06" x2="8.54" y2="14"></line>
+              <line x1="10.88" y1="21.94" x2="15.46" y2="14"></line>
+            </svg>
+            Browser Extension (.zip)
+          </a>
         </div>
 
         <div style="font-size: 0.85rem; color: var(--text-muted);">
-          Windows 10/11 (4.8 MB) &bull; Linux x86_64 (6.1 MB) &bull; Clean, Private &amp; Telemetry-Free
+          Windows 10/11 &bull; Linux x86_64 &bull; Chrome, Edge &amp; Brave Extension &bull; Clean &amp; Telemetry-Free
         </div>
       </div>
 
@@ -493,6 +504,58 @@ echo "Please find attached reports what you asked" | fluenta --mode concise</cod
           </div>
         </div>
 
+        <!-- Browser Extension Guide Card -->
+        <div class="guide-card">
+          <div class="guide-card-header">
+            <div class="guide-card-title">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="12" r="4"></circle>
+                <line x1="21.17" y1="8" x2="12" y2="8"></line>
+                <line x1="3.95" y1="6.06" x2="8.54" y2="14"></line>
+                <line x1="10.88" y1="21.94" x2="15.46" y2="14"></line>
+              </svg>
+              <span>Browser Extension Installation Guide</span>
+            </div>
+            <span class="guide-pill pill-windows">Chrome / Edge / Brave</span>
+          </div>
+
+          <ol class="step-list">
+            <li class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-body">
+                <strong>Download &amp; Extract the Extension</strong>
+                <p>Download <a href="fluenta-browser-extension.zip" download="fluenta-browser-extension.zip" style="color:var(--accent-primary); text-decoration:underline;">fluenta-browser-extension.zip</a> and extract the folder to a permanent location.</p>
+              </div>
+            </li>
+
+            <li class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-body">
+                <strong>Open Extensions Page in Browser</strong>
+                <p>In Google Chrome or Brave, visit <code>chrome://extensions</code>. In Microsoft Edge, visit <code>edge://extensions</code>.</p>
+              </div>
+            </li>
+
+            <li class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-body">
+                <strong>Enable Developer Mode &amp; Load</strong>
+                <p>Turn on the <strong>Developer mode</strong> toggle (top right corner), then click <strong>Load unpacked</strong> and select the extracted extension folder.</p>
+              </div>
+            </li>
+
+            <li class="step-item">
+              <div class="step-num">4</div>
+              <div class="step-body">
+                <strong>Instant Proofreading on Any Website</strong>
+                <p>Highlight text in Gmail, Notion, Slack, Twitter/X, or Google Docs to see the floating trigger, or press:</p>
+                <code class="code-snippet" style="display:inline-block; margin-top:0.35rem;">Alt + G</code>
+              </div>
+            </li>
+          </ol>
+        </div>
+
       </div>
     </div>
   </section>
@@ -502,12 +565,13 @@ echo "Please find attached reports what you asked" | fluenta --mode concise</cod
     <div class="container footer-inner">
       <div style="display:flex; align-items:center; gap:0.6rem;">
         <img src="fluenta-logo.png" alt="FluentA" style="width:24px; height:24px; border-radius:6px;">
-        <span>FluentA © 2026. Built for Windows & Linux.</span>
+        <span>FluentA © 2026. Built for Windows, Linux &amp; Web.</span>
       </div>
 
       <ul class="footer-links">
         <li><a href="FluentASetup.exe" download="FluentASetup.exe">Windows Installer (.exe)</a></li>
         <li><a href="fluenta-linux-amd64.tar.gz" download="fluenta-linux-amd64.tar.gz">Linux Package (.tar.gz)</a></li>
+        <li><a href="fluenta-browser-extension.zip" download="fluenta-browser-extension.zip">Browser Extension (.zip)</a></li>
         <li><a href="PRIVACY.md">Privacy Policy</a></li>
       </ul>
     </div>

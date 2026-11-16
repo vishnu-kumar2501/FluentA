@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FluentA Quick Proofread</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="popup-header">
+      <div class="popup-brand">
+        <img src="../icons/icon32.png" alt="FluentA" class="brand-icon">
+        <span class="brand-title">FluentA AI</span>
+      </div>
+      <div class="header-actions">
+        <button id="open-options-btn" class="icon-btn" title="Settings">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Mode Selector -->
+    <div class="mode-tabs">
+      <button class="mode-tab active" data-mode="fix">Fix Grammar</button>
+      <button class="mode-tab" data-mode="enhance">Enhance</button>
+      <button class="mode-tab" data-mode="formal">Formal</button>
+      <button class="mode-tab" data-mode="concise">Concise</button>
+    </div>
+
+    <!-- Quick Scratchpad Area -->
+    <div class="scratchpad-area">
+      <textarea id="scratchpad-input" placeholder="Type or paste any text to proofread..." spellcheck="false"></textarea>
+      
+      <div id="scratchpad-output-container" class="output-container" style="display:none;">
+        <div class="output-header">
+          <span>AI Suggestion:</span>
+          <span id="output-latency" class="latency-pill">⚡ 0ms</span>
+        </div>
+        <div id="scratchpad-output" class="output-body"></div>
+      </div>
+    </div>
+
+    <!-- Scratchpad Actions -->
+    <div class="popup-actions">
+      <span class="hotkey-tip"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> to run</span>
+      <div style="display:flex; gap:6px;">
+        <button id="copy-btn" class="btn btn-secondary" style="display:none;">Copy</button>
+        <button id="check-btn" class="btn btn-primary">Check with AI</button>
+      </div>
+    </div>
+
+    <!-- Website Control Status -->
+    <div class="site-toggle-bar">
+      <div class="toggle-info">
+        <span class="status-dot"></span>
+        <span id="current-site-label">Active on this site</span>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="site-toggle" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

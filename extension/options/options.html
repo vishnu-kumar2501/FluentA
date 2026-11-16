@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FluentA Settings — Browser Extension</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="settings-container">
+    <!-- Header -->
+    <header class="settings-header">
+      <div class="brand">
+        <img src="../icons/icon48.png" alt="FluentA" class="brand-logo">
+        <div>
+          <h1>FluentA Extension Settings</h1>
+          <p>Configure AI inference provider, shortcuts, and privacy rules.</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="settings-body">
+      <!-- Section 1: AI Provider -->
+      <section class="settings-card">
+        <h2 class="card-title">AI Provider & Inference Gateway</h2>
+        <p class="card-subtitle">Select where text is processed. By default, FluentA uses our serverless Cloudflare gateway with zero key required.</p>
+
+        <div class="form-group">
+          <label class="form-label" for="provider-select">Provider Type</label>
+          <select id="provider-select" class="form-select">
+            <option value="cloud">FluentA Cloud Gateway (Default — Zero Config, Sub-Second)</option>
+            <option value="openai">Custom OpenAI / Groq Compatible API</option>
+            <option value="ollama">Local Ollama (100% Offline &amp; Private)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="base-url-input">API Base URL</label>
+          <input type="text" id="base-url-input" class="form-input" placeholder="https://fluenta-proxy.kumarvishnu610.workers.dev">
+          <span class="field-hint">Defaults to our serverless Cloudflare gateway. For local Ollama use <code>http://127.0.0.1:11434</code></span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="model-input">Model Name</label>
+          <input type="text" id="model-input" class="form-input" placeholder="openai/gpt-oss-120b">
+          <span class="field-hint">e.g. <code>openai/gpt-oss-120b</code>, <code>llama-3.3-70b-versatile</code>, or <code>qwen2.5:latest</code></span>
+        </div>
+
+        <div class="form-group" id="api-key-group">
+          <label class="form-label" for="api-key-input">API Key (Optional for Cloud Gateway)</label>
+          <input type="password" id="api-key-input" class="form-input" placeholder="Leave empty to use built-in gateway">
+          <span class="field-hint">Only required if using custom direct Groq or OpenAI endpoints.</span>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:12px; margin-top:8px;">
+          <button type="button" id="test-connection-btn" class="btn btn-secondary">
+            ⚡ Test Connection
+          </button>
+          <span id="test-status" class="test-status"></span>
+        </div>
+      </section>
+
+      <!-- Section 2: Behavior & Modes -->
+      <section class="settings-card">
+        <h2 class="card-title">Behavior & Modes</h2>
+        
+        <div class="form-group">
+          <label class="form-label" for="default-mode-select">Default Mode</label>
+          <select id="default-mode-select" class="form-select">
+            <option value="fix">Fix Grammar (Spelling, punctuation & capitalization)</option>
+            <option value="enhance">Enhance Flow (Clarity, vocabulary & polish)</option>
+            <option value="formal">Executive Formal (Professional workplace tone)</option>
+            <option value="concise">Make Concise (Short, punchy & direct)</option>
+            <option value="explain">Explain Changes (Detailed breakdown of fixes)</option>
+          </select>
+        </div>
+
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-title">Show Floating Badge on Text Selection</div>
+            <div class="toggle-desc">Automatically display the FluentA trigger pill when selecting text in any input or paragraph.</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="badge-toggle" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="shortcut-box">
+          <div>
+            <strong>Keyboard Shortcut:</strong>
+            <span style="color:#94a3b8; font-size:12px; margin-left:6px;">Highlight text and press <kbd class="kbd-pill">Alt</kbd> + <kbd class="kbd-pill">G</kbd></span>
+          </div>
+          <a href="#" id="change-shortcut-link" style="color:#818cf8; font-size:12px; text-decoration:none;">Change browser shortcut &rarr;</a>
+        </div>
+      </section>
+
+      <!-- Section 3: Privacy & Excluded Domains -->
+      <section class="settings-card">
+        <h2 class="card-title">Privacy & Excluded Domains</h2>
+        <p class="card-subtitle">FluentA will automatically suspend all text listening and floating badges on these domain names (one per line):</p>
+
+        <div class="form-group">
+          <textarea id="excluded-domains-input" class="form-textarea" rows="4" placeholder="paypal.com&#10;chase.com&#10;bankofamerica.com"></textarea>
+          <span class="field-hint">Sensitive websites like banks and password managers are excluded by default.</span>
+        </div>
+      </section>
+
+      <!-- Actions -->
+      <div class="save-bar">
+        <button id="save-settings-btn" class="btn btn-primary">Save Changes</button>
+        <span id="save-status" class="save-status"></span>
+      </div>
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
