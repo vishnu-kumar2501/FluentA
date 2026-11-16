@@ -76,13 +76,13 @@
           Download for Windows (.exe)
         </a>
 
-        <a href="fluenta_1.0.0_amd64.deb" download="fluenta_1.0.0_amd64.deb" class="btn btn-secondary btn-lg">
-          <!-- Ubuntu/Debian .deb -->
+        <a href="fluenta-linux-amd64.tar.gz" download="fluenta-linux-amd64.tar.gz" class="btn btn-secondary btn-lg">
+          <!-- Linux Tux/Terminal SVG -->
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="4 17 10 11 4 5"></polyline>
             <line x1="12" y1="19" x2="20" y2="19"></line>
           </svg>
-          Download for Linux (.deb)
+          Download for Linux (.tar.gz)
         </a>
       </div>
 
@@ -341,26 +341,17 @@
             Download for Windows (.exe)
           </a>
 
-          <a href="fluenta_1.0.0_amd64.deb" download="fluenta_1.0.0_amd64.deb" class="btn btn-secondary btn-lg">
+          <a href="fluenta-linux-amd64.tar.gz" download="fluenta-linux-amd64.tar.gz" class="btn btn-secondary btn-lg">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="4 17 10 11 4 5"></polyline>
               <line x1="12" y1="19" x2="20" y2="19"></line>
             </svg>
-            Download .deb (Ubuntu/Debian)
-          </a>
-
-          <a href="fluenta-linux-amd64.tar.gz" download="fluenta-linux-amd64.tar.gz" class="btn btn-secondary btn-lg">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-            Download .tar.gz (Universal Linux)
+            Download for Linux (.tar.gz)
           </a>
         </div>
 
         <div style="font-size: 0.85rem; color: var(--text-muted);">
-          Windows 10/11 (4.8 MB) &bull; Ubuntu/Debian .deb (6.4 MB) &bull; Linux .tar.gz (6.1 MB) &bull; Telemetry-Free
+          Windows 10/11 (4.8 MB) &bull; Linux x86_64 (6.1 MB) &bull; Clean, Private &amp; Telemetry-Free
         </div>
       </div>
 
@@ -427,21 +418,23 @@
             <li class="step-item">
               <div class="step-num">1</div>
               <div class="step-body">
-                <strong>Method A — Ubuntu / Debian (.deb)</strong>
-                <p>Download <a href="fluenta_1.0.0_amd64.deb" download="fluenta_1.0.0_amd64.deb" style="color:var(--accent-emerald); text-decoration:underline;">fluenta_1.0.0_amd64.deb</a> and install via terminal or double-click:</p>
-                <code class="code-snippet">sudo dpkg -i fluenta_1.0.0_amd64.deb</code>
+                <strong>Download &amp; Extract the Archive</strong>
+                <p>Download <a href="fluenta-linux-amd64.tar.gz" download="fluenta-linux-amd64.tar.gz" style="color:var(--accent-emerald); text-decoration:underline;">fluenta-linux-amd64.tar.gz</a> and extract it in terminal:</p>
+                <code class="code-snippet">tar -xzf fluenta-linux-amd64.tar.gz
+cd fluenta-linux-amd64</code>
               </div>
             </li>
 
             <li class="step-item">
               <div class="step-num">2</div>
               <div class="step-body">
-                <strong>Method B — Universal Linux (.tar.gz)</strong>
-                <p>For any Linux distribution, extract the archive and run the included installer script:</p>
-                <code class="code-snippet">tar -xzf fluenta-linux-amd64.tar.gz
-cd fluenta-linux-amd64
-sudo chmod +x install.sh
+                <strong>Run the Automated Installer</strong>
+                <p>Execute the installer with root privileges to install the desktop app and CLI to <code>/usr/bin</code>:</p>
+                <code class="code-snippet">sudo chmod +x install.sh
 sudo ./install.sh</code>
+                <p style="font-size:0.825rem; color:var(--text-muted); margin-top:0.3rem;">
+                  <em>Zero lock issues: Installs directly to system paths without waiting for apt/dpkg package manager locks.</em>
+                </p>
               </div>
             </li>
 
@@ -493,8 +486,8 @@ echo "Please find attached reports what you asked" | fluenta --mode concise</cod
               Linux Troubleshooting Tips
             </strong>
             <ul style="margin:0 0 0 1.2rem; font-size:0.825rem; line-height:1.6;">
-              <li><strong>"Could not get lock /var/lib/dpkg/lock-frontend"</strong>: Ubuntu background updater is busy. Wait 30 seconds or run <code>sudo killall apt apt-get</code>, or use <code>sudo ./install.sh</code> directly.</li>
               <li><strong>Permission Denied on install.sh</strong>: Run <code>chmod +x install.sh</code> before executing.</li>
+              <li><strong>Already Running</strong>: <code>fluenta-desktop</code> is a background service and prevents duplicate instances automatically.</li>
               <li><strong>Missing clipboard utility</strong>: On X11, install <code>xclip</code> (<code>sudo apt install xclip xdotool</code>). On Wayland, install <code>wl-clipboard</code> (<code>sudo apt install wl-clipboard</code>).</li>
             </ul>
           </div>
@@ -514,8 +507,7 @@ echo "Please find attached reports what you asked" | fluenta --mode concise</cod
 
       <ul class="footer-links">
         <li><a href="FluentASetup.exe" download="FluentASetup.exe">Windows Installer (.exe)</a></li>
-        <li><a href="fluenta_1.0.0_amd64.deb" download="fluenta_1.0.0_amd64.deb">Ubuntu / Debian (.deb)</a></li>
-        <li><a href="fluenta-linux-amd64.tar.gz" download="fluenta-linux-amd64.tar.gz">Linux Universal (.tar.gz)</a></li>
+        <li><a href="fluenta-linux-amd64.tar.gz" download="fluenta-linux-amd64.tar.gz">Linux Package (.tar.gz)</a></li>
         <li><a href="PRIVACY.md">Privacy Policy</a></li>
       </ul>
     </div>

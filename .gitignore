@@ -1,5 +1,7 @@
 
-# Secret & local override files
+# Binaries & packages
+dist/
+*.deb
 groq.txt
 *.key
 *.pem
