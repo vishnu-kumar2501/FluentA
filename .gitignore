@@ -1,0 +1,21 @@
+# Binaries & build outputs
+FluentA.exe
+*.exe
+*.syso
+dist/
+
+# Secret & local override files
+groq.txt
+*.key
+*.pem
+
+# Logs & temp files
+*.log
+*.tmp
+fluenta-gocache/
+
+# OS and Editor artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

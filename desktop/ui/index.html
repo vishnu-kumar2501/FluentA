@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FluentA</title>
+  <link rel="icon" type="image/png" href="fluenta-logo.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell" id="app-shell">
+    <header class="topbar" id="window-header" title="Drag to move window">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <img class="brand-logo" src="fluenta-logo.png" alt="" width="26" height="26">
+        </span>
+        <h1 class="app-title">FluentA</h1>
+        <span class="model-tag" id="model-tag">qwen3.5:4b</span>
+        <button type="button" class="ai-status-badge" id="ai-status-badge" data-state="connected" title="AI Provider Status (Click for Preferences)">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="ai-status-badge-text">Connected</span>
+        </button>
+        <span class="hotkey-tag" id="hotkey-tag" title="Global shortcut">Ctrl+Alt+G</span>
+      </div>
+
+      <div class="topbar-right">
+        <button type="button" class="toggle-pill" id="btn-watch-toggle" aria-pressed="true" title="Toggle background UI Automation watcher">
+          <span class="toggle-dot" aria-hidden="true"></span>
+          <span id="watch-toggle-label">Watcher ON</span>
+        </button>
+        <button type="button" class="toggle-pill toggle-pill-pause" id="btn-pause-toggle" aria-pressed="false" title="Pause hotkey and background assistant">
+          <span id="pause-toggle-label">Active</span>
+        </button>
+        <div class="status-pill" id="status-pill" data-state="idle" role="status" aria-live="polite">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="status-text">Ready</span>
+        </div>
+        <button type="button" class="icon-btn" id="btn-history-toggle" title="Check history" aria-label="History" aria-pressed="false">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+            <path d="M3 3v5h5"/>
+            <path d="M12 7v5l4 2"/>
+          </svg>
+        </button>
+        <button type="button" class="icon-btn" id="btn-settings-toggle" title="Preferences" aria-label="Preferences" aria-pressed="false">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+        <button type="button" class="icon-btn" id="btn-theme" title="Toggle light or dark theme" aria-label="Toggle theme">
+          <svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2"/><path d="M12 20v2"/>
+            <path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/>
+            <path d="M2 12h2"/><path d="M20 12h2"/>
+            <path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+          </svg>
+          <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+          </svg>
+        </button>
+        <button type="button" class="icon-btn icon-btn-close" id="btn-cancel" title="Close (Esc)" aria-label="Close">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18"/>
+            <path d="m6 6 12 12"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="toolbar-row" id="toolbar-row">
+      <nav class="mode-strip" id="mode-strip" aria-label="Writing mode">
+        <button type="button" class="mode-btn" data-mode="fix" aria-pressed="true">Fix</button>
+        <button type="button" class="mode-btn" data-mode="enhance" aria-pressed="false">Enhance</button>
+        <button type="button" class="mode-btn" data-mode="formal" aria-pressed="false">Formal</button>
+        <button type="button" class="mode-btn" data-mode="concise" aria-pressed="false">Concise</button>
+        <button type="button" class="mode-btn" data-mode="explain" aria-pressed="false">Explain</button>
+      </nav>
+      <div class="lang-picker-wrap">
+        <label for="language-select" class="sr-only">Target Language</label>
+        <select id="language-select" class="lang-select" title="Output language or regional spelling">
+          <option value="Auto-detect">Auto-detect</option>
+          <option value="English (US)">English (US)</option>
+          <option value="English (UK)">English (UK)</option>
+          <option value="English (India)">English (India)</option>
+          <option value="Spanish">Spanish</option>
+          <option value="French">French</option>
+          <option value="German">German</option>
+          <option value="Portuguese">Portuguese</option>
+        </select>
+      </div>
+    </div>
+
+    <main class="workspace">
+      <section class="pane pane-source" id="pane-source">
+        <div class="pane-header">
+          <label for="source-input" class="pane-label">Original text</label>
+          <div class="pane-meta">
+            <span class="char-stats" id="source-stats">0 words · 0 chars</span>
+            <button type="button" class="ghost-mini-btn" id="btn-clear-input" hidden>Clear</button>
+          </div>
+        </div>
+        <textarea
+          id="source-input"
+          class="editor-textarea editor-source"
+          placeholder="Select text in any app and press your hotkey, or paste / type text here..."
+          spellcheck="false"
+        ></textarea>
+      </section>
+
+      <div class="error-banner" id="error-banner" role="alert" hidden>
+        <span class="error-icon" aria-hidden="true">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </span>
+        <span class="error-message" id="error-message"></span>
+        <button type="button" class="ghost-mini-btn error-retry-btn" id="btn-retry">Retry</button>
+      </div>
+
+      <div class="notice-banner" id="hotkey-notice-banner" role="status" hidden>
+        <span class="notice-message" id="hotkey-notice-message"></span>
+        <button type="button" class="ghost-mini-btn" id="btn-hotkey-notice-settings">Change shortcut</button>
+        <button type="button" class="ghost-mini-btn" id="btn-hotkey-notice-dismiss" aria-label="Dismiss notice">Dismiss</button>
+      </div>
+
+      <section class="pane pane-result" id="pane-result">
+        <div class="pane-header result-header">
+          <div class="view-tabs" role="tablist" aria-label="Output view">
+            <button type="button" class="view-tab" id="tab-diff" role="tab" aria-selected="true" data-view="diff">Inline Diff</button>
+            <button type="button" class="view-tab" id="tab-list" role="tab" aria-selected="false" data-view="list">Corrections <span class="tab-badge" id="hunk-count-badge" hidden>0</span></button>
+            <button type="button" class="view-tab" id="tab-split" role="tab" aria-selected="false" data-view="split">Compare</button>
+            <button type="button" class="view-tab" id="tab-clean" role="tab" aria-selected="false" data-view="clean">Edit Result</button>
+            <button type="button" class="view-tab" id="tab-insights" role="tab" aria-selected="false" data-view="insights">Insights</button>
+          </div>
+          <div class="pane-meta">
+            <div class="history-controls">
+              <button type="button" class="icon-mini-btn" id="btn-undo" title="Undo (Ctrl+Z)" aria-label="Undo" disabled>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 7v6h6"/>
+                  <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>
+                </svg>
+              </button>
+              <button type="button" class="icon-mini-btn" id="btn-redo" title="Redo (Ctrl+Y)" aria-label="Redo" disabled>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 7v6h-6"/>
+                  <path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"/>
+                </svg>
+              </button>
+            </div>
+            <span class="diff-summary" id="diff-summary">Waiting</span>
+          </div>
+        </div>
+
+        <div class="hunk-inspector-bar" id="hunk-inspector-bar" hidden>
+          <div class="hunk-inspector-main">
+            <span class="hunk-inspector-preview" id="inspector-preview"></span>
+            <span class="hunk-inspector-reason" id="inspector-reason"></span>
+          </div>
+          <div class="hunk-inspector-actions">
+            <button type="button" class="mini-action-btn mini-accept" id="btn-inspector-accept">Accept</button>
+            <button type="button" class="mini-action-btn mini-reject" id="btn-inspector-reject">Reject</button>
+            <button type="button" class="mini-action-btn" id="btn-inspector-why">Why?</button>
+          </div>
+        </div>
+
+        <div class="result-body">
+          <div id="diff-view" class="diff-view" tabindex="0" aria-live="polite">
+            <div class="empty-state" id="empty-state">
+              <p class="empty-title">No suggestion yet</p>
+              <p class="empty-hint" id="hotkey-hint">Highlight text anywhere and press Ctrl+Alt+G, or edit text above and click Re-check.</p>
+            </div>
+          </div>
+
+          <div id="corrections-view" class="corrections-view" hidden>
+            <div class="corrections-toolbar" id="corrections-toolbar">
+              <span class="corrections-meta" id="corrections-meta">0 corrections</span>
+              <div class="corrections-bulk-actions">
+                <button type="button" class="ghost-mini-btn" id="btn-explain-all">Explain all</button>
+                <button type="button" class="ghost-mini-btn" id="btn-accept-all">Accept all</button>
+                <button type="button" class="ghost-mini-btn" id="btn-reject-all">Reject all</button>
+              </div>
+            </div>
+            <div class="corrections-list" id="corrections-list"></div>
+          </div>
+
+          <div id="split-view" class="split-view" hidden>
+            <div class="split-col">
+              <div class="split-col-header">Original</div>
+              <div class="split-col-body" id="split-original"></div>
+            </div>
+            <div class="split-col">
+              <div class="split-col-header">Updated</div>
+              <div class="split-col-body" id="split-updated"></div>
+            </div>
+          </div>
+
+          <textarea
+            id="output-input"
+            class="editor-textarea editor-output"
+            placeholder="Corrected or enhanced text will appear here..."
+            spellcheck="false"
+            hidden
+          ></textarea>
+
+          <div id="insights-view" class="insights-view" hidden>
+            <div class="insights-toolbar">
+              <span class="insights-title">Readability &amp; Writing Insights</span>
+              <button type="button" class="ghost-mini-btn insights-analyze-btn" id="btn-analyze-writing">Analyze Writing</button>
+            </div>
+            <div class="insights-scroll">
+              <div class="metrics-grid" id="metrics-grid">
+                <div class="metric-card">
+                  <span class="metric-label">Words</span>
+                  <span class="metric-value" id="metric-words">0</span>
+                </div>
+                <div class="metric-card">
+                  <span class="metric-label">Sentences</span>
+                  <span class="metric-value" id="metric-sentences">0</span>
+                </div>
+                <div class="metric-card">
+                  <span class="metric-label">Readability</span>
+                  <span class="metric-value" id="metric-readability">—</span>
+                </div>
+                <div class="metric-card">
+                  <span class="metric-label">Read Time</span>
+                  <span class="metric-value" id="metric-readtime">0s</span>
+                </div>
+              </div>
+
+              <div class="ai-insights-panel" id="ai-insights-panel">
+                <div class="ai-insights-empty" id="ai-insights-empty">
+                  Click <strong>Analyze Writing</strong> for AI writing score, tone detection, and vocabulary upgrades.
+                </div>
+                <div class="ai-insights-content" id="ai-insights-content" hidden>
+                  <div class="insights-summary-row">
+                    <div class="score-badge-box">
+                      <span class="score-number" id="ai-score-value">—</span>
+                      <span class="score-caption">Score / 100</span>
+                    </div>
+                    <div class="tone-clarity-col">
+                      <div class="tone-row">
+                        <span class="tone-pill" id="ai-tone-badge">Neutral</span>
+                        <span class="tone-summary" id="ai-tone-summary"></span>
+                      </div>
+                      <p class="clarity-summary" id="ai-clarity-summary"></p>
+                    </div>
+                  </div>
+                  <div class="vocab-section">
+                    <div class="vocab-header">Vocabulary Upgrades</div>
+                    <div class="vocab-list" id="vocab-list"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel-view" id="history-panel" hidden>
+        <div class="panel-header">
+          <div class="panel-title-group">
+            <button type="button" class="ghost-mini-btn panel-back-btn" id="btn-history-back">← Back</button>
+            <h2 class="panel-title">Recent Checks</h2>
+          </div>
+          <div class="panel-header-actions">
+            <input type="search" id="history-search" class="panel-search-input" placeholder="Search history..." aria-label="Search history">
+            <button type="button" class="ghost-mini-btn" id="btn-history-clear">Clear all</button>
+          </div>
+        </div>
+        <div class="panel-body history-list" id="history-list"></div>
+      </section>
+
+      <section class="panel-view" id="settings-panel" hidden>
+        <div class="panel-header">
+          <div class="panel-title-group">
+            <button type="button" class="ghost-mini-btn panel-back-btn" id="btn-settings-back">← Back</button>
+            <h2 class="panel-title">Preferences</h2>
+          </div>
+        </div>
+        <div class="panel-body settings-form">
+          <div class="setting-row">
+            <label for="setting-default-mode" class="setting-label">Default mode</label>
+            <select id="setting-default-mode" class="setting-control">
+              <option value="fix">Fix</option>
+              <option value="enhance">Enhance</option>
+              <option value="formal">Formal</option>
+              <option value="concise">Concise</option>
+              <option value="explain">Explain</option>
+            </select>
+          </div>
+          <div class="setting-row">
+            <label for="setting-language" class="setting-label">Default language</label>
+            <select id="setting-language" class="setting-control">
+              <option value="Auto-detect">Auto-detect</option>
+              <option value="English (US)">English (US)</option>
+              <option value="English (UK)">English (UK)</option>
+              <option value="English (India)">English (India)</option>
+              <option value="Spanish">Spanish</option>
+              <option value="French">French</option>
+              <option value="German">German</option>
+              <option value="Portuguese">Portuguese</option>
+            </select>
+          </div>
+          <div class="setting-row">
+            <label for="setting-theme" class="setting-label">Appearance</label>
+            <select id="setting-theme" class="setting-control">
+              <option value="system">System default</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+          <div class="setting-row setting-row-check">
+            <label for="setting-watch-enabled" class="setting-label">Background UIA watcher</label>
+            <input type="checkbox" id="setting-watch-enabled" class="setting-checkbox">
+          </div>
+          <div class="setting-block">
+            <div class="setting-hotkey-head">
+              <label for="setting-hotkey" class="setting-label">Global shortcut</label>
+              <span class="hotkey-check-badge" id="hotkey-check-badge" data-state="idle" role="status" aria-live="polite">Active</span>
+            </div>
+            <div class="hotkey-controls">
+              <input type="text" id="setting-hotkey" class="setting-control hotkey-input" value="Ctrl+Alt+G" placeholder="Ctrl+Alt+G" spellcheck="false" autocomplete="off">
+              <button type="button" class="ghost-mini-btn" id="btn-hotkey-record">Record</button>
+              <button type="button" class="ghost-mini-btn" id="btn-hotkey-check">Check</button>
+              <button type="button" class="ghost-mini-btn" id="btn-hotkey-default" title="Reset to Ctrl+Alt+G">Default</button>
+            </div>
+            <div class="setting-hint" id="hotkey-check-detail">Click Record and press a modifier + key (e.g. Ctrl+Shift+G), or type it and click Check.</div>
+          </div>
+
+          <div class="setting-block ai-settings-block">
+            <div class="setting-hotkey-head">
+              <span class="setting-label">AI Inference Engine</span>
+              <span class="ai-test-badge" id="ai-test-badge" data-state="idle" role="status" aria-live="polite">Ready</span>
+            </div>
+            <div class="setting-row">
+              <label for="setting-ai-provider" class="setting-label">AI Provider</label>
+              <select id="setting-ai-provider" class="setting-control">
+                <option value="cloud">Cloud AI (Groq / OpenAI API — Recommended)</option>
+                <option value="ollama">Local Ollama (Offline &amp; Private)</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <label for="setting-ai-base-url" class="setting-label">API Endpoint</label>
+              <input type="text" id="setting-ai-base-url" class="setting-control" placeholder="https://fluenta-proxy.kumarvishnu610.workers.dev" spellcheck="false">
+            </div>
+            <div class="setting-row">
+              <label for="setting-ai-model" class="setting-label">Model Identifier</label>
+              <input type="text" id="setting-ai-model" class="setting-control" placeholder="openai/gpt-oss-120b" spellcheck="false">
+            </div>
+            <div class="setting-row" id="row-setting-ai-key">
+              <label for="setting-ai-api-key" class="setting-label">API Key</label>
+              <div class="input-with-button">
+                <input type="password" id="setting-ai-api-key" class="setting-control" placeholder="Optional (Cloud proxy is pre-configured)" spellcheck="false" autocomplete="off">
+                <button type="button" class="ghost-mini-btn" id="btn-toggle-setting-key">Show</button>
+              </div>
+            </div>
+            <div class="ai-test-actions">
+              <button type="button" class="ghost-mini-btn" id="btn-test-ai">Test Connection</button>
+              <button type="button" class="ghost-mini-btn" id="btn-preset-groq" title="Restore Groq defaults">Preset: Groq (Fastest)</button>
+              <button type="button" class="ghost-mini-btn" id="btn-preset-ollama" title="Restore local Ollama defaults">Preset: Local Ollama</button>
+            </div>
+            <div class="setting-hint" id="ai-test-detail">Cloud AI requires no setup or high-end GPU. Local Ollama requires ollama.exe running locally.</div>
+          </div>
+
+          <div class="setting-block privacy-setting-card">
+            <div class="setting-hotkey-head">
+              <span class="setting-label">🔒 Privacy &amp; Data Transparency</span>
+              <button type="button" class="ghost-mini-btn" id="btn-view-privacy">View Policy →</button>
+            </div>
+            <div class="privacy-badges-row">
+              <span class="privacy-tag">✓ Zero Keylogging</span>
+              <span class="privacy-tag">✓ No AI Training</span>
+              <span class="privacy-tag">✓ Offline Capable</span>
+              <span class="privacy-tag">✓ Zero Telemetry</span>
+            </div>
+            <div class="setting-hint">Your writing is never used to train AI models or stored in the cloud. Text is processed ephemerally during inference only.</div>
+          </div>
+
+          <div class="setting-block">
+            <label for="setting-excluded-apps" class="setting-label">Excluded apps (privacy blocklist — one executable per line)</label>
+            <textarea id="setting-excluded-apps" class="setting-textarea" rows="4" spellcheck="false" placeholder="keepass.exe&#10;1password.exe&#10;cmd.exe"></textarea>
+          </div>
+          <div class="settings-actions">
+            <button type="button" class="btn btn-secondary" id="btn-settings-cancel">Cancel</button>
+            <button type="button" class="btn btn-primary" id="btn-settings-save">Save Preferences</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel-view" id="privacy-panel" hidden>
+        <div class="panel-header">
+          <div class="panel-title-group">
+            <button type="button" class="ghost-mini-btn panel-back-btn" id="btn-privacy-back">← Back</button>
+            <h2 class="panel-title">Privacy &amp; Data Transparency</h2>
+          </div>
+        </div>
+        <div class="panel-body privacy-panel-body">
+          <div class="privacy-hero-card">
+            <div class="privacy-hero-head">
+              <span class="privacy-hero-icon">🛡️</span>
+              <div>
+                <h3 class="privacy-hero-title">Privacy by Architecture</h3>
+                <p class="privacy-hero-sub">FluentA is built on the principle that your writing belongs solely to you. We do not track, monetize, or train AI on your text.</p>
+              </div>
+            </div>
+            <div class="privacy-badges-row">
+              <span class="privacy-tag">✓ Zero Keylogging</span>
+              <span class="privacy-tag">✓ No AI Training</span>
+              <span class="privacy-tag">✓ Air-Gapped Offline Capable</span>
+              <span class="privacy-tag">✓ Zero Telemetry</span>
+            </div>
+          </div>
+
+          <div class="privacy-card">
+            <h4 class="privacy-card-title">1. Zero Keylogging &amp; Password Safety</h4>
+            <p class="privacy-card-text">FluentA is <strong>not</strong> a keylogger. It never records raw keystrokes or background typing. It only inspects text when you trigger checking or pause typing in a supported text field. All password, PIN, and sensitive credential fields are strictly ignored by Windows UI Automation classification.</p>
+          </div>
+
+          <div class="privacy-card">
+            <h4 class="privacy-card-title">2. Zero AI Model Training</h4>
+            <p class="privacy-card-text">Your writing, grammar corrections, and style choices are <strong>never</strong> used to train, retrain, or fine-tune public or proprietary AI models. Text is processed in-memory for inference and discarded immediately.</p>
+          </div>
+
+          <div class="privacy-card">
+            <h4 class="privacy-card-title">3. 100% Offline Air-Gapped Mode (Local Ollama)</h4>
+            <p class="privacy-card-text">If you have strict data sovereignty or enterprise compliance needs, switch to <strong>Local Ollama</strong> in Preferences. When selected, 100% of grammar and style inference runs locally on your PC. Zero bytes of text ever leave your computer.</p>
+          </div>
+
+          <div class="privacy-card">
+            <h4 class="privacy-card-title">4. Encrypted Cloud AI Transit</h4>
+            <p class="privacy-card-text">When using Cloud AI (Groq / OpenAI API), text is transmitted exclusively over an encrypted <strong>TLS 1.3</strong> HTTPS connection, held ephemerally in server RAM solely to generate the suggestion, and immediately discarded.</p>
+          </div>
+
+          <div class="privacy-card">
+            <h4 class="privacy-card-title">5. Excluded Applications Blocklist</h4>
+            <p class="privacy-card-text">You can block sensitive apps (e.g. <code>1password.exe</code>, <code>keepass.exe</code>, <code>cmd.exe</code>) in Preferences. FluentA instantly deactivates itself whenever any excluded application is focused.</p>
+          </div>
+
+          <div class="privacy-card">
+            <h4 class="privacy-card-title">6. Local Data Control &amp; Instant Wipe</h4>
+            <p class="privacy-card-text">Your revision history is stored strictly on your local machine at <code>%APPDATA%\FluentA\history.json</code>. You can wipe your entire history at any time with one click in the History tab. Uninstalling FluentA removes all data completely.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel-view onboarding-panel" id="onboarding-panel" hidden>
+        <div class="onboarding-hero">
+          <img class="onboarding-logo" src="fluenta-logo.png" alt="" width="44" height="44">
+          <h2 class="onboarding-title">Welcome to FluentA</h2>
+          <p class="onboarding-desc">Select how you want FluentA to check and enhance your writing across all your Windows apps:</p>
+          <div class="onboarding-privacy-callout">
+            <span class="callout-icon">🔒</span>
+            <span><strong>Privacy Guarantee:</strong> FluentA never records keystrokes, never stores your writing in the cloud, and never trains AI on your text.</span>
+          </div>
+        </div>
+
+        <div class="onboarding-cards">
+          <div class="onboard-card onboard-card-highlighted" id="card-cloud">
+            <div class="onboard-card-header">
+              <span class="onboard-card-badge badge-recommended">Recommended · Instant</span>
+              <h3 class="onboard-card-title">Cloud AI (Groq Fast Inference)</h3>
+            </div>
+            <p class="onboard-card-desc">Zero installation, instant sub-second response times, powered by GPT OSS 120B. Works smoothly on any PC without high GPU or RAM demands.</p>
+            <div class="onboard-input-group">
+              <label for="onboard-cloud-key" class="setting-label">API Key (Pre-configured for you)</label>
+              <div class="input-with-button">
+                <input type="password" id="onboard-cloud-key" class="setting-control" placeholder="gsk_... (Default key pre-loaded)" spellcheck="false" autocomplete="off">
+                <button type="button" class="ghost-mini-btn" id="btn-toggle-onboard-key">Show</button>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary onboard-action-btn" id="btn-onboard-cloud">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+              </svg>
+              <span>Connect with Cloud AI</span>
+            </button>
+          </div>
+
+          <div class="onboard-card" id="card-ollama">
+            <div class="onboard-card-header">
+              <span class="onboard-card-badge">Offline · Private</span>
+              <h3 class="onboard-card-title">Local Ollama</h3>
+            </div>
+            <p class="onboard-card-desc">100% offline &amp; private inference. Requires Ollama installed on your machine with <code>qwen3.5:4b</code>.</p>
+            <div class="onboard-input-group">
+              <label for="onboard-ollama-url" class="setting-label">Ollama Address</label>
+              <input type="text" id="onboard-ollama-url" class="setting-control" value="http://127.0.0.1:11434" spellcheck="false">
+            </div>
+            <button type="button" class="btn btn-secondary onboard-action-btn" id="btn-onboard-ollama">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="20" height="8" x="2" y="2" rx="2" ry="2"/>
+                <rect width="20" height="8" x="2" y="14" rx="2" ry="2"/>
+                <line x1="6" x2="6.01" y1="6" y2="6"/>
+                <line x1="6" x2="6.01" y1="18" y2="18"/>
+              </svg>
+              <span>Connect to Local Ollama</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="onboard-status-banner" id="onboard-status-banner" role="status" hidden>
+          <span class="status-dot" aria-hidden="true"></span>
+          <span class="onboard-status-text" id="onboard-status-text">Checking connection...</span>
+        </div>
+
+        <div class="onboarding-footer">
+          <button type="button" class="ghost-mini-btn" id="btn-onboard-skip">Continue to Editor (Configure later)</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="action-bar">
+      <div class="shortcut-hints" aria-hidden="true">
+        <span class="shortcut-item"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> apply</span>
+        <span class="shortcut-item"><kbd>Esc</kbd> close</span>
+      </div>
+
+      <div class="action-buttons">
+        <button type="button" class="btn btn-secondary" id="btn-recheck">
+          <svg class="icon-refresh" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
+            <path d="M21 3v5h-5"/>
+          </svg>
+          <span id="recheck-label">Re-check</span>
+        </button>
+        <button type="button" class="btn btn-secondary" id="btn-copy" disabled>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+          </svg>
+          <span id="copy-label">Copy</span>
+        </button>
+        <button type="button" class="btn btn-primary" id="btn-replace" disabled>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <span id="replace-label">Replace</span>
+        </button>
+      </div>
+    </footer>
+    <div class="resize-edge resize-e" data-edge="e" aria-hidden="true"></div>
+    <div class="resize-edge resize-s" data-edge="s" aria-hidden="true"></div>
+    <div class="resize-edge resize-se" data-edge="se" aria-hidden="true"></div>
+  </div>
+  <script src="app.js" defer></script>
+</body>
+</html>
