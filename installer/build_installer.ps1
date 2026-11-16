@@ -26,6 +26,8 @@ try {
     # 1. Build FluentA.exe if requested
     if (-not $SkipBuild) {
         Write-Host "`n[1/3] Generating Windows PE metadata & manifest..." -ForegroundColor Yellow
+        $env:GOOS = 'windows'
+        $env:GOARCH = 'amd64'
         $env:CGO_ENABLED = '0'
         $env:GOCACHE = Join-Path $env:TEMP 'fluenta-gocache'
         & 'go' generate ./cmd/desktop
@@ -81,11 +83,18 @@ try {
 
     $setupExe = Join-Path $distDir 'FluentASetup.exe'
     if (Test-Path $setupExe) {
+        $docsSetup = Join-Path $RootDir 'docs\FluentASetup.exe'
+        if (Test-Path (Join-Path $RootDir 'docs')) {
+            Copy-Item $setupExe -Destination $docsSetup -Force
+        }
         $setupInfo = Get-Item $setupExe
         Write-Host "`n=============================================" -ForegroundColor Green
         Write-Host "  SUCCESS: FluentASetup.exe created!" -ForegroundColor Green
         Write-Host "  Path: $($setupInfo.FullName)" -ForegroundColor White
         Write-Host "  Size: $([math]::Round($setupInfo.Length / 1MB, 2)) MB" -ForegroundColor White
+        if (Test-Path $docsSetup) {
+            Write-Host "  Copied to docs site: $docsSetup" -ForegroundColor Cyan
+        }
         Write-Host "=============================================" -ForegroundColor Green
     }
 } finally {

@@ -1,6 +1,7 @@
 
 # Binaries & packages
 dist/
+*.exe
 *.deb
 groq.txt
 *.key
