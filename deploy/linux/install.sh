@@ -13,10 +13,12 @@ BIN_DIR="/usr/local/bin"
 APP_DIR="/usr/share/applications"
 ICON_DIR="/usr/share/pixmaps"
 
-# 1. Install binaries
-install -m 755 fluenta-cli "$BIN_DIR/fluenta"
-install -m 755 fluenta-desktop "$BIN_DIR/fluenta-desktop"
-echo "✓ Installed binaries to $BIN_DIR/fluenta and $BIN_DIR/fluenta-desktop"
+# 1. Install binaries to both /usr/bin and /usr/local/bin
+install -m 755 fluenta-cli /usr/bin/fluenta
+install -m 755 fluenta-desktop /usr/bin/fluenta-desktop
+install -m 755 fluenta-cli /usr/local/bin/fluenta
+install -m 755 fluenta-desktop /usr/local/bin/fluenta-desktop
+echo "✓ Installed binaries to /usr/bin and /usr/local/bin"
 
 # 2. Install desktop shortcut
 install -m 644 fluenta.desktop "$APP_DIR/fluenta.desktop"
