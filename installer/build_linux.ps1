@@ -39,8 +39,15 @@ Copy-Item (Join-Path $RootDir "PRIVACY.md") -Destination $DistLinux
 Write-Host "Packaging dist\fluenta-linux-amd64.tar.gz..." -ForegroundColor Green
 tar -czf $ArchiveOut -C $DistLinux .
 
+# 5. Build native .deb installer
+Write-Host "Building native .deb package (fluenta_1.0.0_amd64.deb)..." -ForegroundColor Yellow
+$origEnvGoos = $env:GOOS
+$env:GOOS = "windows"
+go run (Join-Path $PSScriptRoot "build_deb.go")
+$env:GOOS = $origEnvGoos
+
 $tarSize = (Get-Item $ArchiveOut).Length / 1MB
 $roundSize = [math]::Round($tarSize, 2)
-Write-Host "`nSUCCESS: Release archive created:" -ForegroundColor Green
-Write-Host "  Path: $ArchiveOut"
-Write-Host "  Size: $roundSize MB"
+Write-Host "`nSUCCESS: Linux packages created:" -ForegroundColor Green
+Write-Host "  1. Universal Archive: $ArchiveOut ($roundSize MB)"
+Write-Host "  2. Debian/Ubuntu Package: $(Join-Path $RootDir 'dist\fluenta_1.0.0_amd64.deb')"
