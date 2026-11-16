@@ -22,15 +22,20 @@ echo "✓ Installed binaries to $BIN_DIR/fluenta and $BIN_DIR/fluenta-desktop"
 install -m 644 fluenta.desktop "$APP_DIR/fluenta.desktop"
 echo "✓ Installed application launcher to $APP_DIR/fluenta.desktop"
 
-# 3. Install icon if present
+# 3. Install icon to pixmaps and hicolor icon themes
 if [ -f "fluenta-logo.png" ]; then
   install -m 644 fluenta-logo.png "$ICON_DIR/fluenta.png"
-  echo "✓ Installed application icon to $ICON_DIR/fluenta.png"
+  mkdir -p /usr/share/icons/hicolor/256x256/apps/
+  install -m 644 fluenta-logo.png /usr/share/icons/hicolor/256x256/apps/fluenta.png
+  echo "✓ Installed application icon to $ICON_DIR/fluenta.png and hicolor theme"
 fi
 
-# 4. Update desktop database
+# 4. Update desktop and icon databases
 if command -v update-desktop-database >/dev/null 2>&1; then
   update-desktop-database "$APP_DIR" || true
+fi
+if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+  gtk-update-icon-cache -f -t /usr/share/icons/hicolor >/dev/null 2>&1 || true
 fi
 
 echo ""
