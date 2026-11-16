@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FluentA — AI Writing & Grammar Assistant for Windows</title>
+  <meta name="description" content="Native, high-speed, privacy-first desktop writing assistant for Windows. Proofread, enhance, and rewrite text across Slack, Word, Chrome, and VS Code.">
+  <meta property="og:title" content="FluentA — AI Writing & Grammar Assistant for Windows">
+  <meta property="og:description" content="Fix grammar, enhance tone, and rewrite sentences instantly across any Windows app. Zero keylogging.">
+  <meta property="og:image" content="fluenta-logo.png">
+  <link rel="icon" type="image/png" href="fluenta-logo.png">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Ambient Glow Background -->
+  <div class="ambient-glow"></div>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="#" class="brand-link">
+        <img src="fluenta-logo.png" alt="FluentA Logo" class="brand-logo">
+        <span class="brand-name">FluentA</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li class="nav-item"><a href="#demo">Live Demo</a></li>
+          <li class="nav-item"><a href="#features">Features</a></li>
+          <li class="nav-item"><a href="#privacy">Privacy</a></li>
+          <li class="nav-item"><a href="#install">Install Guide</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="https://github.com/vishnu-kumar2501/FluentA" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          GitHub
+        </a>
+        <a href="https://github.com/vishnu-kumar2501/FluentA/releases/latest/download/FluentASetup.exe" class="btn btn-primary btn-sm">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Download
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="release-badge">
+        <span class="status-dot"></span>
+        <span>FluentA v1.0.0 for Windows 10 & 11 (64-bit)</span>
+      </div>
+
+      <h1 class="hero-title">The AI writing assistant that lives in every Windows app.</h1>
+      
+      <p class="hero-subtitle">
+        Highlight any sentence in Slack, Word, Discord, Chrome, or VS Code and press <kbd class="hotkey-pill">Ctrl</kbd> + <kbd class="hotkey-pill">Alt</kbd> + <kbd class="hotkey-pill">G</kbd>. Proofread, elevate tone, or rewrite instantly. Zero keylogging. Sub-second speed.
+      </p>
+
+      <div class="hero-cta-group">
+        <a href="https://github.com/vishnu-kumar2501/FluentA/releases/latest/download/FluentASetup.exe" class="btn btn-primary btn-lg">
+          <!-- Windows SVG -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/>
+          </svg>
+          Download for Windows
+        </a>
+
+        <a href="https://github.com/vishnu-kumar2501/FluentA" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-lg">
+          View Source Code
+        </a>
+      </div>
+
+      <div class="meta-note">
+        <span class="meta-item">✓ Free & Open Source</span>
+        <span class="meta-item">✓ 4.6 MB Installer</span>
+        <span class="meta-item">✓ No API Key Required</span>
+        <span class="meta-item">✓ Offline Mode Supported</span>
+      </div>
+
+      <!-- Interactive Live Demo -->
+      <div class="demo-showcase" id="demo">
+        <div class="demo-header">
+          <div class="window-controls">
+            <div class="window-dot" style="background:#ef4444;"></div>
+            <div class="window-dot" style="background:#f59e0b;"></div>
+            <div class="window-dot" style="background:#10b981;"></div>
+          </div>
+          <div class="demo-title-bar">
+            <span>Interactive Simulator — Try FluentA Modes</span>
+          </div>
+          <div>
+            <span class="hotkey-pill">Global Hotkey: Ctrl+Alt+G</span>
+          </div>
+        </div>
+
+        <div class="mode-tabs">
+          <button class="mode-tab active" data-mode="fix">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+            Fix Grammar
+          </button>
+          <button class="mode-tab" data-mode="enhance">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Enhance Flow
+          </button>
+          <button class="mode-tab" data-mode="formal">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            Executive Formal
+          </button>
+          <button class="mode-tab" data-mode="concise">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/></svg>
+            Make Concise
+          </button>
+        </div>
+
+        <div class="demo-body">
+          <div class="demo-pane demo-pane-input">
+            <div class="pane-label">
+              <span>Original Text (Editable)</span>
+              <span style="font-size: 0.7rem; color: var(--text-muted);">Type your own text</span>
+            </div>
+            <textarea class="demo-input-area" id="demo-input" spellcheck="false"></textarea>
+          </div>
+
+          <div class="demo-pane">
+            <div class="pane-label">
+              <span>FluentA Suggestion</span>
+              <span id="demo-tone" style="color: var(--accent-cyan);">Clear & Correct</span>
+            </div>
+            <div class="demo-output-area" id="demo-output"></div>
+          </div>
+        </div>
+
+        <div class="demo-footer">
+          <div style="color: var(--text-secondary);">
+            Pressing <strong>Enter</strong> in FluentA replaces text directly in your active application.
+          </div>
+          <button class="btn btn-secondary btn-sm" id="demo-copy-btn">
+            Copy Result
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Features Section -->
+  <section class="features-section" id="features">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-title">Engineered for speed, privacy, and seamless Windows workflows.</h2>
+        <p class="section-desc">Unlike browser extensions that only work on web pages, FluentA operates natively across the entire Windows operating system.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-box">
+          <div class="feature-icon-wrapper">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <h3 class="feature-title">Works Everywhere</h3>
+          <p class="feature-text">Highlight text in Microsoft Word, Slack, Notion, Discord, Outlook, WhatsApp, or Visual Studio Code and trigger in-place replacement instantly.</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon-wrapper">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3 class="feature-title">Zero Keylogging</h3>
+          <p class="feature-text">FluentA never monitors, intercepts, or logs your keystrokes. It only reads highlighted text at the exact moment you invoke the shortcut.</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon-wrapper">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <h3 class="feature-title">Sub-Second Speed</h3>
+          <p class="feature-text">Powered by modern high-throughput inference through our serverless Cloudflare AI gateway, results return in 400ms to 800ms.</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon-wrapper">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
+          </div>
+          <h3 class="feature-title">Draggable Floating Badge</h3>
+          <p class="feature-text">An unobtrusive status pill snaps beside your active text cursor. Need it out of the way? Simply click and drag it to any corner of your monitor.</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon-wrapper">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          </div>
+          <h3 class="feature-title">100% Offline Ollama Mode</h3>
+          <p class="feature-text">Want total isolation? Switch provider to local Ollama (e.g. Qwen 2.5). Every token runs directly on your local GPU/CPU with zero internet required.</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon-wrapper">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+          <h3 class="feature-title">Tone & Readability Scores</h3>
+          <p class="feature-text">Get instant readability diagnostics (0–100 score), detected writing tone, word counts, and actionable advice to sharpen your voice.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Privacy & Architecture -->
+  <section class="privacy-section" id="privacy">
+    <div class="container">
+      <div class="split-layout">
+        <div class="privacy-content">
+          <h2>Your writing is yours. No training. No storage.</h2>
+          <p>
+            Most grammar utilities store your keystrokes on their central servers to train commercial language models. FluentA was architected from day one with a zero-retention guarantee.
+          </p>
+
+          <ul class="guarantee-list">
+            <li class="guarantee-item">
+              <svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+              <div class="guarantee-text">
+                <strong>Zero Keystroke Logging</strong>
+                <span>FluentA never runs keyloggers. Windows hooks are strictly used to listen for your explicit hotkey trigger.</span>
+              </div>
+            </li>
+
+            <li class="guarantee-item">
+              <svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+              <div class="guarantee-text">
+                <strong>No Model Training</strong>
+                <span>Text transmitted to the AI engine is processed ephemerally in RAM and permanently discarded immediately upon completion.</span>
+              </div>
+            </li>
+
+            <li class="guarantee-item">
+              <svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+              <div class="guarantee-text">
+                <strong>Sensitive App Protection</strong>
+                <span>FluentA automatically suspends monitoring whenever password managers (1Password, Bitwarden, KeePass) or banking windows are focused.</span>
+              </div>
+            </li>
+          </ul>
+
+          <a href="https://github.com/vishnu-kumar2501/FluentA/blob/main/PRIVACY.md" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+            Read Full Privacy Policy (PRIVACY.md) →
+          </a>
+        </div>
+
+        <div class="architecture-card">
+          <div class="arch-node">
+            <div class="arch-title">
+              <span>1. Active Windows Application</span>
+              <span class="hotkey-pill">Local PC</span>
+            </div>
+            <div class="arch-desc">Word, Slack, or Chrome text field. Triggered only upon user hotkey.</div>
+          </div>
+
+          <div class="arch-arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+          </div>
+
+          <div class="arch-node">
+            <div class="arch-title">
+              <span>2. Cloudflare Edge Gateway</span>
+              <span class="hotkey-pill" style="color:var(--accent-cyan);">Protected Proxy</span>
+            </div>
+            <div class="arch-desc">Encrypted HTTPS transit. Rate-limiting protects free quotas. Zero logs retained.</div>
+          </div>
+
+          <div class="arch-arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+          </div>
+
+          <div class="arch-node">
+            <div class="arch-title">
+              <span>3. Ultra-Fast LLM Inference</span>
+              <span class="hotkey-pill" style="color:var(--accent-emerald);">Groq / Llama 3</span>
+            </div>
+            <div class="arch-desc">Sub-second generation. Text is strictly processed in memory and never saved.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Download & Installation Guide -->
+  <section class="download-section" id="install">
+    <div class="container">
+      <div class="download-box">
+        <h2 class="download-title">Elevate your writing today.</h2>
+        <p class="download-subtitle">Fast, lightweight, native Windows installer. Setup takes less than 30 seconds.</p>
+
+        <a href="https://github.com/vishnu-kumar2501/FluentA/releases/latest/download/FluentASetup.exe" class="btn btn-primary btn-lg" style="margin-bottom: 1.25rem;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/>
+          </svg>
+          Download FluentASetup.exe (v1.0.0)
+        </a>
+
+        <div style="font-size: 0.85rem; color: var(--text-muted);">
+          Compatible with Windows 10 & 11 (64-bit) • Size: 4.62 MB • SHA-256 verified
+        </div>
+      </div>
+
+      <!-- SmartScreen Walkthrough -->
+      <div class="smartscreen-guide">
+        <div class="guide-header">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-amber)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span>Note for Windows Defender SmartScreen on First Launch:</span>
+        </div>
+        <p class="guide-step">
+          As FluentA is a newly published independent open-source release without an enterprise EV signing certificate ($300+/yr), Windows may show a standard blue prompt: <em>"Windows protected your PC"</em>.<br><br>
+          Simply click <code>More info</code> $\rightarrow$ <code>Run anyway</code>. The installer is completely clean, contains zero telemetry, and can be inspected in our open-source repository.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div style="display:flex; align-items:center; gap:0.6rem;">
+        <img src="fluenta-logo.png" alt="FluentA" style="width:24px; height:24px; border-radius:6px;">
+        <span>FluentA © 2026. Built with Go & Windows WebView2.</span>
+      </div>
+
+      <ul class="footer-links">
+        <li><a href="https://github.com/vishnu-kumar2501/FluentA" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        <li><a href="https://github.com/vishnu-kumar2501/FluentA/releases" target="_blank" rel="noopener noreferrer">Releases</a></li>
+        <li><a href="https://github.com/vishnu-kumar2501/FluentA/blob/main/PRIVACY.md" target="_blank" rel="noopener noreferrer">Privacy Policy</a></li>
+        <li><a href="https://github.com/vishnu-kumar2501/FluentA/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">License</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

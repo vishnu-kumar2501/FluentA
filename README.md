@@ -1,5 +1,9 @@
 # FluentA — AI Writing & Grammar Assistant for Windows
 
+[![Download FluentA](https://img.shields.io/badge/Download-FluentA%20v1.0.0%20(Windows)-6366F1?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/vishnu-kumar2501/FluentA/releases/latest/download/FluentASetup.exe)
+[![GitHub release](https://img.shields.io/github/v/release/vishnu-kumar2501/FluentA?style=for-the-badge&color=10B981)](https://github.com/vishnu-kumar2501/FluentA/releases)
+[![Website](https://img.shields.io/badge/Website-Live%20Demo-06B6D4?style=for-the-badge)](https://vishnu-kumar2501.github.io/FluentA/)
+
 **FluentA** is a fast, native, privacy-first desktop writing assistant for Windows. Powered by modern LLMs, it proofreads grammar, fixes spelling errors, rewrites tone, and polishes your writing across **any Windows app** (Word, Slack, Discord, Chrome, VS Code, Notepad) using a single global shortcut.
 
 ---
@@ -27,7 +31,7 @@
 
 ## 📥 Download & Installation
 
-1. Download the latest **[FluentASetup.exe](https://github.com/your-username/FluentA/releases/latest/download/FluentASetup.exe)** from the Releases page.
+1. Download the latest **[FluentASetup.exe](https://github.com/vishnu-kumar2501/FluentA/releases/latest/download/FluentASetup.exe)** from the Releases page.
 2. Run `FluentASetup.exe` to install.
    > **Note on Windows SmartScreen:** As this is a new open-source binary, Windows Defender may show a blue prompt on first launch. Click **"More info" → "Run anyway"**.
 3. FluentA will launch minimized to your system tray. Press <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>G</kbd> to start writing!
@@ -50,7 +54,7 @@ For full details on our data protection commitments, read our **[Privacy Policy]
 ### Build Steps
 ```powershell
 # 1. Clone the repository
-git clone https://github.com/your-username/FluentA.git
+git clone https://github.com/vishnu-kumar2501/FluentA.git
 cd FluentA
 
 # 2. Build the release binary and installer
