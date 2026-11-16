@@ -3,6 +3,7 @@
 package desktop
 
 import (
+	"context"
 	"fmt"
 	"syscall"
 	"time"
@@ -198,4 +199,27 @@ func utf16PtrToString(ptr uintptr) string {
 	buf := make([]uint16, length)
 	_, _, _ = procRtlMoveMemory.Call(uintptr(unsafe.Pointer(&buf[0])), ptr, uintptr(length*2))
 	return syscall.UTF16ToString(buf)
+}
+
+// ReadSelection captures highlighted text from the active window on Windows.
+func ReadSelection(ctx context.Context) (string, error) {
+	text, _, ok, err := captureSelection()
+	if err != nil {
+		return "", err
+	}
+	if !ok || text == "" {
+		// Fallback to clipboard content if selection capture was empty
+		clip, hasText, err := readClipboardText()
+		if err == nil && hasText {
+			return clip, nil
+		}
+	}
+	return text, nil
+}
+
+// ReplaceSelectedText pastes newText into the active window on Windows.
+func ReplaceSelectedText(ctx context.Context, newText string) error {
+	hwnd, _, _ := procGetForegroundWindow.Call()
+	backup, _ := saveClipboard()
+	return replaceSelection(hwnd, newText, backup)
 }

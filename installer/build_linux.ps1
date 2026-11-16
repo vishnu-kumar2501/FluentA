@@ -1,4 +1,4 @@
-﻿# FluentA Linux Cross-Compilation & Packaging Script
+# FluentA Linux Cross-Compilation & Packaging Script
 $ErrorActionPreference = "Stop"
 
 Write-Host "==========================================" -ForegroundColor Cyan
