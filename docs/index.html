@@ -133,27 +133,51 @@
           <div class="demo-pane demo-pane-input">
             <div class="pane-label">
               <span>Original Text (Editable)</span>
-              <span style="font-size: 0.7rem; color: var(--text-muted);">Type your own text</span>
+              <span id="char-count" class="char-count">65 chars</span>
             </div>
-            <textarea class="demo-input-area" id="demo-input" spellcheck="false"></textarea>
+            <textarea class="demo-input-area" id="demo-input" spellcheck="false" placeholder="Type or paste any text to proofread..."></textarea>
+            
+            <div class="sample-chips">
+              <span class="chips-label">Presets:</span>
+              <button type="button" class="sample-chip" data-sample="grammar">Grammar Fix</button>
+              <button type="button" class="sample-chip" data-sample="casual">Casual Email</button>
+              <button type="button" class="sample-chip" data-sample="wordy">Wordy Sentence</button>
+              <button type="button" class="sample-chip" data-sample="typos">Messy Typos</button>
+            </div>
+
+            <div class="demo-input-actions">
+              <span style="font-size:0.75rem; color:var(--text-muted);"><kbd class="hotkey-pill">Ctrl</kbd> + <kbd class="hotkey-pill">Enter</kbd> to run</span>
+              <button type="button" class="btn btn-primary btn-sm" id="btn-run-check">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <span id="btn-run-label">Check with AI</span>
+              </button>
+            </div>
           </div>
 
           <div class="demo-pane">
             <div class="pane-label">
               <span>FluentA Suggestion</span>
-              <span id="demo-tone" style="color: var(--accent-cyan);">Clear & Correct</span>
+              <div class="output-tags">
+                <span id="demo-latency" class="latency-pill">⚡ Live</span>
+                <span id="demo-tone" class="tone-pill">Clear & Correct</span>
+              </div>
             </div>
             <div class="demo-output-area" id="demo-output"></div>
           </div>
         </div>
 
         <div class="demo-footer">
-          <div style="color: var(--text-secondary);">
+          <div style="color: var(--text-secondary); font-size:0.85rem;">
             Pressing <strong>Enter</strong> in FluentA replaces text directly in your active application.
           </div>
-          <button class="btn btn-secondary btn-sm" id="demo-copy-btn">
-            Copy Result
-          </button>
+          <div style="display:flex; gap:0.6rem;">
+            <button class="btn btn-secondary btn-sm" id="demo-apply-btn">
+              Apply to Input
+            </button>
+            <button class="btn btn-secondary btn-sm" id="demo-copy-btn">
+              Copy Result
+            </button>
+          </div>
         </div>
       </div>
     </div>
