@@ -11,32 +11,52 @@ import (
 	"time"
 )
 
-func writeTarGz(files map[string][]byte, modes map[string]int64) ([]byte, error) {
+type tarItem struct {
+	name  string
+	mode  int64
+	isDir bool
+	data  []byte
+}
+
+func writeTarGzEntries(items []tarItem) ([]byte, error) {
 	var buf bytes.Buffer
 	gw := gzip.NewWriter(&buf)
 	tw := tar.NewWriter(gw)
+	now := time.Now()
 
-	for path, data := range files {
-		mode := int64(0644)
-		if m, ok := modes[path]; ok {
-			mode = m
-		}
-		hdr := &tar.Header{
-			Name:     path,
-			Mode:     mode,
-			Size:     int64(len(data)),
-			ModTime:  time.Now(),
-			Typeflag: tar.TypeReg,
-			Uid:      0,
-			Gid:      0,
-			Uname:    "root",
-			Gname:    "root",
-		}
-		if err := tw.WriteHeader(hdr); err != nil {
-			return nil, err
-		}
-		if _, err := tw.Write(data); err != nil {
-			return nil, err
+	for _, it := range items {
+		if it.isDir {
+			hdr := &tar.Header{
+				Name:     it.name,
+				Mode:     0755,
+				Typeflag: tar.TypeDir,
+				ModTime:  now,
+				Uid:      0,
+				Gid:      0,
+				Uname:    "root",
+				Gname:    "root",
+			}
+			if err := tw.WriteHeader(hdr); err != nil {
+				return nil, err
+			}
+		} else {
+			hdr := &tar.Header{
+				Name:     it.name,
+				Mode:     it.mode,
+				Size:     int64(len(it.data)),
+				Typeflag: tar.TypeReg,
+				ModTime:  now,
+				Uid:      0,
+				Gid:      0,
+				Uname:    "root",
+				Gname:    "root",
+			}
+			if err := tw.WriteHeader(hdr); err != nil {
+				return nil, err
+			}
+			if _, err := tw.Write(it.data); err != nil {
+				return nil, err
+			}
 		}
 	}
 
@@ -75,7 +95,9 @@ func writeArEntry(w io.Writer, name string, data []byte) error {
 func main() {
 	exeDir, _ := os.Getwd()
 	rootDir := exeDir
-	if filepath.Base(rootDir) == "installer" {
+	if _, err := os.Stat(filepath.Join(rootDir, "GrammarDesktop")); err == nil {
+		rootDir = filepath.Join(rootDir, "GrammarDesktop")
+	} else if filepath.Base(rootDir) == "installer" {
 		rootDir = filepath.Dir(rootDir)
 	}
 
@@ -124,29 +146,35 @@ Description: FluentA — Fast, Private AI Writing & Grammar Assistant
  your writing across any application.
 `
 
-	controlFiles := map[string][]byte{
-		"./control": []byte(controlContent),
+	// 1. control.tar.gz with directory entries
+	controlItems := []tarItem{
+		{name: "./", isDir: true},
+		{name: "./control", mode: 0644, data: []byte(controlContent)},
 	}
-	controlTarGz, err := writeTarGz(controlFiles, map[string]int64{"./control": 0644})
+	controlTarGz, err := writeTarGzEntries(controlItems)
 	if err != nil {
 		panic(err)
 	}
 
-	dataFiles := map[string][]byte{
-		"./usr/bin/fluenta":                                  cliBytes,
-		"./usr/bin/fluenta-desktop":                          deskBytes,
-		"./usr/share/applications/fluenta.desktop":           []byte(desktopFile),
-		"./usr/share/pixmaps/fluenta.png":                    iconBytes,
-		"./usr/share/icons/hicolor/256x256/apps/fluenta.png": iconBytes,
+	// 2. data.tar.gz with complete directory tree
+	dataItems := []tarItem{
+		{name: "./", isDir: true},
+		{name: "./usr/", isDir: true},
+		{name: "./usr/bin/", isDir: true},
+		{name: "./usr/bin/fluenta", mode: 0755, data: cliBytes},
+		{name: "./usr/bin/fluenta-desktop", mode: 0755, data: deskBytes},
+		{name: "./usr/share/", isDir: true},
+		{name: "./usr/share/applications/", isDir: true},
+		{name: "./usr/share/applications/fluenta.desktop", mode: 0644, data: []byte(desktopFile)},
+		{name: "./usr/share/pixmaps/", isDir: true},
+		{name: "./usr/share/pixmaps/fluenta.png", mode: 0644, data: iconBytes},
+		{name: "./usr/share/icons/", isDir: true},
+		{name: "./usr/share/icons/hicolor/", isDir: true},
+		{name: "./usr/share/icons/hicolor/256x256/", isDir: true},
+		{name: "./usr/share/icons/hicolor/256x256/apps/", isDir: true},
+		{name: "./usr/share/icons/hicolor/256x256/apps/fluenta.png", mode: 0644, data: iconBytes},
 	}
-	dataModes := map[string]int64{
-		"./usr/bin/fluenta":                                  0755,
-		"./usr/bin/fluenta-desktop":                          0755,
-		"./usr/share/applications/fluenta.desktop":           0644,
-		"./usr/share/pixmaps/fluenta.png":                    0644,
-		"./usr/share/icons/hicolor/256x256/apps/fluenta.png": 0644,
-	}
-	dataTarGz, err := writeTarGz(dataFiles, dataModes)
+	dataTarGz, err := writeTarGzEntries(dataItems)
 	if err != nil {
 		panic(err)
 	}
@@ -172,5 +200,5 @@ Description: FluentA — Fast, Private AI Writing & Grammar Assistant
 	}
 
 	fi, _ := debFile.Stat()
-	fmt.Printf("Created DEB package: %s (%.2f MB)\n", outDeb, float64(fi.Size())/1024/1024)
+	fmt.Printf("Created standard DEB package: %s (%.2f MB)\n", outDeb, float64(fi.Size())/1024/1024)
 }
