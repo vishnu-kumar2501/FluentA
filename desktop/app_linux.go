@@ -15,6 +15,7 @@ import (
 	"sync"
 	"time"
 
+	"grammar/ai"
 	"grammar/grammar"
 )
 
@@ -45,28 +46,36 @@ func Run(ctx context.Context, checker *grammar.Checker, cfg Config) error {
 	}
 	history, _ := LoadHistory(dataDir)
 
+	defMode := cfg.DefaultMode
+	if defMode == "" {
+		defMode = grammar.ModeFix
+	}
+
 	app := &linuxApp{
-		checker:  checker,
-		cfg:      cfg,
-		dataDir:  dataDir,
-		settings: settings,
-		history:  history,
-		sseChan:  make(chan hostEvent, 64),
+		checker:     checker,
+		cfg:         cfg,
+		dataDir:     dataDir,
+		settings:    settings,
+		history:     history,
+		currentMode: defMode,
+		sseChan:     make(chan hostEvent, 128),
 	}
 
 	return app.start(ctx)
 }
 
 type linuxApp struct {
-	checker  *grammar.Checker
-	cfg      Config
-	dataDir  string
-	settings Settings
-	history  []HistoryItem
+	checker     *grammar.Checker
+	cfg         Config
+	dataDir     string
+	settings    Settings
+	history     []HistoryItem
+	currentMode grammar.Mode
 
-	mu      sync.Mutex
-	sseChan chan hostEvent
-	server  *http.Server
+	mu           sync.Mutex
+	activeCancel context.CancelFunc
+	sseChan      chan hostEvent
+	server       *http.Server
 }
 
 func (a *linuxApp) broadcast(evt hostEvent) {
@@ -114,22 +123,30 @@ func (a *linuxApp) start(ctx context.Context) error {
 		w.Header().Set("Connection", "keep-alive")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 
-		// Send initial config snapshot
+		// 1. Send initial config snapshot
 		initEvt := a.makeConfigEvent()
 		data, _ := json.Marshal(initEvt)
 		_, _ = fmt.Fprintf(w, "data: %s\n\n", data)
 		flusher.Flush()
 
-		// Read active Linux selection on open
-		if selText, err := ReadSelection(r.Context()); err == nil && strings.TrimSpace(selText) != "" {
-			selEvt := hostEvent{
-				Type:             "source",
-				SourceText:       selText,
-				CanReplaceTarget: true,
-			}
-			selData, _ := json.Marshal(selEvt)
-			_, _ = fmt.Fprintf(w, "data: %s\n\n", selData)
-			flusher.Flush()
+		// 2. Read active Linux primary selection on open and populate editor
+		selText, _ := ReadSelection(r.Context())
+		trimmedSel := strings.TrimSpace(selText)
+
+		openEvt := hostEvent{
+			Type:             "open",
+			SourceText:       trimmedSel,
+			CanReplaceTarget: trimmedSel != "",
+			Mode:             string(a.currentMode),
+			ModelName:        a.settings.AIModel,
+		}
+		openData, _ := json.Marshal(openEvt)
+		_, _ = fmt.Fprintf(w, "data: %s\n\n", openData)
+		flusher.Flush()
+
+		// If text was selected, automatically trigger check
+		if trimmedSel != "" {
+			go a.executeCheck(context.Background(), trimmedSel, a.currentMode)
 		}
 
 		clientGone := r.Context().Done()
@@ -202,7 +219,7 @@ func (a *linuxApp) makeConfigEvent() hostEvent {
 		Type:           "config",
 		HotkeyLabel:    a.settings.Hotkey,
 		ModelName:      a.settings.AIModel,
-		Mode:           a.settings.DefaultMode,
+		Mode:           string(a.currentMode),
 		DefaultMode:    a.settings.DefaultMode,
 		WatchEnabled:   watchVal,
 		Paused:         a.settings.Paused,
@@ -222,40 +239,95 @@ func (a *linuxApp) handleUIMessage(ctx context.Context, msg uiMessage) {
 	case "ready":
 		a.broadcast(a.makeConfigEvent())
 
-	case "check":
-		mode, _ := grammar.ParseMode(msg.Mode)
-		res, err := a.checker.CheckModeStream(ctx, msg.Text, mode, nil)
-		if err != nil {
-			a.broadcast(hostEvent{Type: "error", Error: err.Error()})
+	case "mode":
+		if m, err := grammar.ParseMode(msg.Mode); err == nil {
+			a.mu.Lock()
+			a.currentMode = m
+			a.mu.Unlock()
+			a.broadcast(hostEvent{Type: "mode", Mode: string(m)})
+		}
+
+	case "recheck", "check":
+		targetMode := a.currentMode
+		if msg.Mode != "" {
+			if m, err := grammar.ParseMode(msg.Mode); err == nil {
+				targetMode = m
+				a.mu.Lock()
+				a.currentMode = m
+				a.mu.Unlock()
+			}
+		}
+		text := strings.TrimSpace(msg.Text)
+		if text == "" {
+			a.broadcast(hostEvent{Type: "error", Error: "Input text is empty."})
 			return
 		}
-		a.broadcast(hostEvent{
-			Type:       "result",
-			SourceText: msg.Text,
-			OutputText: res.Message.Content,
-			Mode:       string(mode),
-		})
+		a.executeCheck(ctx, text, targetMode)
 
-		// Add to history
-		item := HistoryItem{
-			ID:         fmt.Sprintf("%d", time.Now().UnixNano()),
-			Timestamp:  time.Now().Format(time.RFC3339),
-			Mode:       string(mode),
-			SourceText: msg.Text,
-			OutputText: res.Message.Content,
-		}
+	case "stop":
 		a.mu.Lock()
-		a.history, _ = AppendHistory(a.dataDir, item, 50)
+		if a.activeCancel != nil {
+			a.activeCancel()
+			a.activeCancel = nil
+		}
 		a.mu.Unlock()
 
 	case "replace":
-		// Replace selected text in active Linux window via clipboard & keystroke simulation
-		if err := ReplaceSelectedText(ctx, msg.Revised); err != nil {
+		text := msg.Text
+		if text == "" {
+			text = msg.Revised
+		}
+		if err := ReplaceSelectedText(ctx, text); err != nil {
 			log.Printf("replace text error: %v", err)
 			a.broadcast(hostEvent{Type: "error", Error: err.Error()})
 		}
 
-	case "settings":
+	case "copy":
+		text := msg.Text
+		if text == "" {
+			text = msg.Revised
+		}
+		_ = WriteClipboard(ctx, text)
+
+	case "clearHistory":
+		_ = ClearHistory(a.dataDir)
+		a.mu.Lock()
+		a.history = nil
+		a.mu.Unlock()
+		a.broadcast(hostEvent{
+			Type:    "history",
+			History: []HistoryItem{},
+		})
+
+	case "explainChanges":
+		go func() {
+			explanations, err := a.checker.ExplainChanges(ctx, msg.Original, msg.Revised, msg.Changes)
+			if err != nil {
+				log.Printf("explainChanges error: %v", err)
+				return
+			}
+			a.broadcast(hostEvent{
+				Type:         "explanations",
+				RequestID:    msg.RequestID,
+				Explanations: explanations,
+			})
+		}()
+
+	case "analyzeWriting":
+		go func() {
+			insights, err := a.checker.AnalyzeWriting(ctx, msg.Text, msg.Language)
+			if err != nil {
+				log.Printf("analyzeWriting error: %v", err)
+				return
+			}
+			a.broadcast(hostEvent{
+				Type:      "insights",
+				RequestID: msg.RequestID,
+				Insights:  &insights,
+			})
+		}()
+
+	case "saveSettings", "settings":
 		if msg.Settings != nil {
 			a.mu.Lock()
 			a.settings = *msg.Settings
@@ -264,6 +336,81 @@ func (a *linuxApp) handleUIMessage(ctx context.Context, msg uiMessage) {
 			a.broadcast(a.makeConfigEvent())
 		}
 	}
+}
+
+func (a *linuxApp) executeCheck(ctx context.Context, text string, mode grammar.Mode) {
+	a.mu.Lock()
+	if a.activeCancel != nil {
+		a.activeCancel()
+	}
+	inferCtx, cancel := context.WithCancel(ctx)
+	a.activeCancel = cancel
+	a.mu.Unlock()
+
+	// Notify UI streaming has started
+	a.broadcast(hostEvent{
+		Type:      "start",
+		Mode:      string(mode),
+		Streaming: true,
+	})
+
+	go func() {
+		defer cancel()
+		var fullStreamed strings.Builder
+
+		res, err := a.checker.CheckModeStream(inferCtx, text, mode, func(chunk ai.StreamChunk) error {
+			if chunk.Content != "" {
+				fullStreamed.WriteString(chunk.Content)
+				a.broadcast(hostEvent{
+					Type: "chunk",
+					Text: chunk.Content,
+				})
+			}
+			return nil
+		})
+
+		if err != nil {
+			if inferCtx.Err() != context.Canceled {
+				a.broadcast(hostEvent{
+					Type:  "error",
+					Error: err.Error(),
+				})
+			}
+			return
+		}
+
+		finalOutput := res.Message.Content
+		if finalOutput == "" {
+			finalOutput = fullStreamed.String()
+		}
+		finalOutput = grammar.CleanOutput(finalOutput)
+
+		// Notify UI completion
+		a.broadcast(hostEvent{
+			Type:       "done",
+			Text:       finalOutput,
+			OutputText: finalOutput,
+			Mode:       string(mode),
+		})
+
+		// Add to history
+		item := HistoryItem{
+			ID:         fmt.Sprintf("%d", time.Now().UnixNano()),
+			Timestamp:  time.Now().Format(time.RFC3339),
+			Mode:       string(mode),
+			SourceText: text,
+			OutputText: finalOutput,
+		}
+		a.mu.Lock()
+		updated, _ := AppendHistory(a.dataDir, item, defaultHistoryMaxItems)
+		a.history = updated
+		a.mu.Unlock()
+
+		a.broadcast(hostEvent{
+			Type:    "history",
+			History: updated,
+		})
+	}()
 }
 
 // launchWindow opens the app in a standalone app window using the best available Linux browser
