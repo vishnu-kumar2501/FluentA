@@ -109,6 +109,33 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
+// Helper: Safely deliver message to tab, dynamically injecting content script if not yet loaded
+async function deliverToTab(tabId, message) {
+  try {
+    await chrome.tabs.sendMessage(tabId, message);
+  } catch (err) {
+    // Content script not loaded (e.g. page was open before extension was installed/reloaded)
+    try {
+      await chrome.scripting.insertCSS({
+        target: { tabId: tabId },
+        files: ["content/content.css"]
+      });
+      await chrome.scripting.executeScript({
+        target: { tabId: tabId },
+        files: ["content/content.js"]
+      });
+      // Wait briefly for script initialization
+      setTimeout(() => {
+        chrome.tabs.sendMessage(tabId, message).catch(e => {
+          console.warn("FluentA: Retried message delivery:", e);
+        });
+      }, 100);
+    } catch (injectErr) {
+      console.warn("FluentA: Cannot inject into this page (may be chrome:// or restricted page):", injectErr);
+    }
+  }
+}
+
 // 2. Handle Context Menu Clicks
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (!tab || !tab.id) return;
@@ -119,12 +146,10 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     fluenta_concise: "concise"
   };
   const mode = modeMap[info.menuItemId] || "fix";
-  chrome.tabs.sendMessage(tab.id, {
+  deliverToTab(tab.id, {
     action: "TRIGGER_SELECTION",
     mode: mode,
     text: info.selectionText || ""
-  }).catch(() => {
-    // Tab may not have content script injected (e.g. chrome://)
   });
 });
 
@@ -133,9 +158,9 @@ chrome.commands.onCommand.addListener((command) => {
   if (command === "proofread_selection") {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs[0] && tabs[0].id) {
-        chrome.tabs.sendMessage(tabs[0].id, {
+        deliverToTab(tabs[0].id, {
           action: "TRIGGER_SHORTCUT"
-        }).catch(() => {});
+        });
       }
     });
   }

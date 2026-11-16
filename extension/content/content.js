@@ -67,7 +67,7 @@
 
     /* FluentA In-Page Modal */
     .fluenta-modal {
-      position: absolute;
+      position: fixed;
       width: 440px;
       max-width: 90vw;
       background: #0d121d;
@@ -416,29 +416,65 @@
       return; // Hotkey only mode
     }
 
-    positionElement(badge, sel);
+    positionBadge(sel);
     badge.classList.add("visible");
   }
 
-  function positionElement(elem, selection) {
+  function positionBadge(selection) {
     if (!selection || selection.rangeCount === 0) return;
-    const rect = selection.getRangeAt(0).getBoundingClientRect();
-    if (rect.width === 0 && rect.height === 0) return;
+    try {
+      const rect = selection.getRangeAt(0).getBoundingClientRect();
+      if (rect.width === 0 && rect.height === 0) return;
 
-    const scrollX = window.scrollX || window.pageXOffset;
-    const scrollY = window.scrollY || window.pageYOffset;
+      const scrollX = window.scrollX || window.pageXOffset;
+      const scrollY = window.scrollY || window.pageYOffset;
 
-    let top = rect.bottom + scrollY + 8;
-    let left = rect.left + scrollX;
+      let top = rect.bottom + scrollY + 8;
+      let left = rect.left + scrollX;
 
-    // Boundary clamping
-    if (left + 440 > window.innerWidth + scrollX) {
-      left = window.innerWidth + scrollX - 450;
+      if (left + 120 > window.innerWidth + scrollX) {
+        left = window.innerWidth + scrollX - 130;
+      }
+      if (left < scrollX + 10) left = scrollX + 10;
+
+      badge.style.top = `${top}px`;
+      badge.style.left = `${left}px`;
+    } catch (_) {}
+  }
+
+  function positionModal(selection) {
+    let top = 0;
+    let left = 0;
+    let positioned = false;
+
+    if (selection && selection.rangeCount > 0) {
+      try {
+        const rect = selection.getRangeAt(0).getBoundingClientRect();
+        if (rect.width > 0 || rect.height > 0) {
+          top = rect.bottom + 10;
+          left = rect.left;
+          positioned = true;
+        }
+      } catch (_) {}
     }
-    if (left < scrollX + 10) left = scrollX + 10;
 
-    elem.style.top = `${top}px`;
-    elem.style.left = `${left}px`;
+    if (!positioned) {
+      // Fallback: Center modal in visible viewport (ideal for context menu clicks)
+      top = Math.max(30, (window.innerHeight - 320) / 2);
+      left = Math.max(20, (window.innerWidth - 440) / 2);
+    } else {
+      // Viewport boundary clamping for fixed positioning
+      if (top + 320 > window.innerHeight) {
+        top = Math.max(20, window.innerHeight - 340);
+      }
+      if (left + 450 > window.innerWidth) {
+        left = Math.max(20, window.innerWidth - 450);
+      }
+      if (left < 20) left = 20;
+    }
+
+    modal.style.top = `${top}px`;
+    modal.style.left = `${left}px`;
   }
 
   // 6. Modal Open & Inference Execution
@@ -448,11 +484,18 @@
   });
 
   function openModal(text, mode = "fix") {
+    if (!text || !text.trim()) {
+      const sel = window.getSelection();
+      text = sel ? sel.toString().trim() : "";
+    }
+    if (!text || !text.trim()) return;
+
     currentSelectionText = text;
     currentMode = mode;
 
     const sel = window.getSelection();
-    positionElement(modal, sel);
+    positionModal(sel);
+    badge.classList.remove("visible");
     modal.classList.add("visible");
 
     // Highlight active mode tab
@@ -610,9 +653,11 @@
   });
 
   // Listen for Messages from Background Worker (Context Menu & Hotkey)
-  chrome.runtime.onMessage.addListener((request) => {
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "TRIGGER_SELECTION") {
       openModal(request.text, request.mode || "fix");
+      if (sendResponse) sendResponse({ received: true });
+      return true;
     }
     if (request.action === "TRIGGER_SHORTCUT") {
       const sel = window.getSelection();
@@ -620,6 +665,8 @@
       if (text) {
         openModal(text, currentMode);
       }
+      if (sendResponse) sendResponse({ received: true });
+      return true;
     }
   });
 

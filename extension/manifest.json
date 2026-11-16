@@ -38,7 +38,8 @@
     "storage",
     "activeTab",
     "contextMenus",
-    "clipboardWrite"
+    "clipboardWrite",
+    "scripting"
   ],
   "host_permissions": [
     "https://fluenta-proxy.kumarvishnu610.workers.dev/*",
