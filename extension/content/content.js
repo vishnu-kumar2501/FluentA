@@ -325,6 +325,8 @@
       <button class="fluenta-mode-btn" data-mode="enhance">Enhance Flow</button>
       <button class="fluenta-mode-btn" data-mode="formal">Formal</button>
       <button class="fluenta-mode-btn" data-mode="concise">Concise</button>
+      <button class="fluenta-mode-btn" data-mode="draft">Draft Email</button>
+      <button class="fluenta-mode-btn" data-mode="reply">Smart Reply</button>
       <button class="fluenta-mode-btn" data-mode="explain">Explain</button>
     </div>
 

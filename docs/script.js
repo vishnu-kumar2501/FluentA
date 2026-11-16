@@ -11,7 +11,9 @@ const MODE_PROMPTS = {
   fix: "You are a precise English grammar assistant. Your sole purpose is to fix grammar, spelling, capitalization, and punctuation errors in the user's text. Output ONLY the corrected text without any commentary, markdown code blocks, quotes, or <text> tags. If there are no errors, output the text unchanged.",
   enhance: "You are an expert English writing assistant. Elevate the clarity, phrasing, flow, and vocabulary of the user's text while preserving its core meaning. Output ONLY the enhanced text without any commentary, markdown code blocks, quotes, or <text> tags.",
   formal: "You are an executive business writing assistant. Rewrite the user's text in a polished, professional, diplomatic tone suitable for workplace communication. Output ONLY the rewritten text without any commentary, markdown code blocks, quotes, or <text> tags.",
-  concise: "You are an editor specializing in concise writing. Tighten the user's text by removing unnecessary words, redundancies, and fluff while preserving all key information. Output ONLY the concise text without any commentary, markdown code blocks, quotes, or <text> tags."
+  concise: "You are an editor specializing in concise writing. Tighten the user's text by removing unnecessary words, redundancies, and fluff while preserving all key information. Output ONLY the concise text without any commentary, markdown code blocks, quotes, or <text> tags.",
+  draft: "You are an expert executive email drafting assistant. Transform the user's raw notes or bullet points into a complete, professional, polished email with a Subject line, greeting, logical body paragraphs, call-to-action, and professional sign-off. Output ONLY the drafted email without commentary or code fences.",
+  reply: "You are an expert email and message reply assistant. Draft a thoughtful, context-aware, courteous professional reply to the incoming message provided. Output ONLY the reply text without commentary or code fences."
 };
 
 // Preset samples for instant demo
@@ -39,6 +41,18 @@ const PRESETS = {
     input: "This project is really good and makes things faster for us and we like it alot.",
     output: "This project delivers exceptional value, substantially accelerating our core workflows and boosting team productivity.",
     tone: "Engaging & Impactful"
+  },
+  bullets: {
+    mode: "draft",
+    input: "- thanks for meet yesterday\n- attached revised quote with 10% discount\n- let me know if monday 10am works for follow up",
+    output: "Subject: Follow-up: Revised Quote & Next Steps\n\nHi [Name],\n\nThank you for meeting with us yesterday. As discussed, I have attached our revised quotation reflecting the 10% discount.\n\nPlease let me know if Monday at 10:00 AM works for a quick follow-up discussion to finalize the details.\n\nBest regards,\n[Your Name]",
+    tone: "Executive Email"
+  },
+  reply: {
+    mode: "reply",
+    input: "Hi team, can we push the sprint review from Thursday to Friday 3 PM? We need more time to finish QA testing.",
+    output: "Hi [Name],\n\nFriday at 3:00 PM works well for us. Thanks for the heads-up, and let us know if you need any assistance with QA in the meantime.\n\nBest regards,\n[Your Name]",
+    tone: "Helpful & Prompt"
   }
 };
 
