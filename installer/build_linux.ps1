@@ -40,6 +40,7 @@ Write-Host "Packaging dist\fluenta-linux-amd64.tar.gz..." -ForegroundColor Green
 tar -czf $ArchiveOut -C $DistLinux .
 
 $tarSize = (Get-Item $ArchiveOut).Length / 1MB
-Write-Host "`n✓ SUCCESS: Release archive created:" -ForegroundColor Green
+$roundSize = [math]::Round($tarSize, 2)
+Write-Host "`nSUCCESS: Release archive created:" -ForegroundColor Green
 Write-Host "  Path: $ArchiveOut"
-Write-Host "  Size: $([math]::Round($tarSize, 2)) MB"
+Write-Host "  Size: $roundSize MB"
