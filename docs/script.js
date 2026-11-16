@@ -177,7 +177,9 @@ document.addEventListener("DOMContentLoaded", () => {
       fix: "Clear & Correct",
       enhance: "Engaging & Natural",
       formal: "Executive & Professional",
-      concise: "Lean & Direct"
+      concise: "Lean & Direct",
+      draft: "Executive Email",
+      reply: "Contextual Reply"
     };
     if (tonePill) tonePill.textContent = toneNames[modeKey] || "Polished";
   }
@@ -185,7 +187,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // Render diff output
   function renderResult(inputText, outputText, latencyMs = null) {
     currentRawOutput = outputText;
-    const diffHtml = diffWords(inputText, outputText);
+    let diffHtml = "";
+    if (currentMode === "draft" || currentMode === "reply") {
+      diffHtml = escapeHtml(outputText).replace(/\n/g, "<br>");
+    } else {
+      diffHtml = diffWords(inputText, outputText);
+    }
     if (outputArea) {
       outputArea.innerHTML = diffHtml;
     }

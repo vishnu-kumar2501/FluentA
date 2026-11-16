@@ -151,11 +151,13 @@ body {
 
 .output-body {
   font-size: 13px;
-  line-height: 1.5;
+  line-height: 1.6;
   color: #ffffff;
-  max-height: 120px;
+  max-height: 200px;
   overflow-y: auto;
+  overflow-x: hidden;
   word-break: break-word;
+  white-space: pre-wrap;
 }
 
 .diff-del {

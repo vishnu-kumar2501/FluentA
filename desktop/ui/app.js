@@ -346,8 +346,12 @@
       return out;
     }
 
+    function isGenerationMode(m) {
+      return m === "draft" || m === "reply" || m === "explain";
+    }
+
     function rebuildModel(source, revised) {
-      if (state.mode === "explain" || !revised) {
+      if (isGenerationMode(state.mode) || !revised) {
         state.segments = [];
         state.selectedHunkId = "";
         return;
@@ -390,7 +394,7 @@
     function applySnapshot(snap) {
       state.aiOutputText = snap.aiOutputText;
       state.outputText = snap.outputText;
-      if (state.aiOutputText && state.mode !== "explain") {
+      if (state.aiOutputText && !isGenerationMode(state.mode)) {
         rebuildModel(state.sourceText, state.aiOutputText);
         const map = new Map(snap.acceptedById || []);
         for (const h of getHunks()) {
@@ -481,7 +485,7 @@
       const hunks = getHunks();
       if (
         state.streaming ||
-        state.mode === "explain" ||
+        isGenerationMode(state.mode) ||
         state.view !== "diff" ||
         hunks.length === 0
       ) {
@@ -541,9 +545,9 @@
         return;
       }
 
-      if (state.mode === "explain") {
+      if (isGenerationMode(state.mode)) {
         container.textContent = state.outputText;
-        els.diffSummary.textContent = "Explanation";
+        els.diffSummary.textContent = state.mode === "draft" ? "Email Draft" : (state.mode === "reply" ? "Smart Reply" : "Explanation");
         return;
       }
 
@@ -588,7 +592,7 @@
 
     function renderCorrectionsList() {
       const hunks = getHunks();
-      if (hunks.length > 0 && state.mode !== "explain") {
+      if (hunks.length > 0 && !isGenerationMode(state.mode)) {
         els.hunkCountBadge.hidden = false;
         els.hunkCountBadge.textContent = String(hunks.length);
       } else {
@@ -744,8 +748,8 @@
         els.diffSummary.textContent = "Waiting";
         return;
       }
-      if (state.mode === "explain") {
-        els.diffSummary.textContent = "Explanation";
+      if (isGenerationMode(state.mode)) {
+        els.diffSummary.textContent = state.mode === "draft" ? "Email Draft" : (state.mode === "reply" ? "Smart Reply" : "Explanation");
         return;
       }
 
@@ -1030,7 +1034,7 @@
           if (item.mode) state.mode = item.mode;
           if (item.language) state.language = item.language;
           state.activePanel = "editor";
-          state.view = state.mode === "explain" ? "clean" : "diff";
+          state.view = isGenerationMode(state.mode) ? "clean" : "diff";
           rebuildModel(state.sourceText, state.outputText);
           resetUndoHistory();
           setStatus("done", "Restored from history");
@@ -1491,7 +1495,7 @@
             state.streaming = Boolean(evt.streaming);
             state.error = evt.error || "";
             state.explainingAll = false;
-            state.view = state.mode === "explain" ? "clean" : "diff";
+            state.view = isGenerationMode(state.mode) ? "clean" : "diff";
             rebuildModel(state.sourceText, state.streaming ? "" : state.aiOutputText);
             resetUndoHistory();
 
@@ -1611,7 +1615,7 @@
         const nextMode = btn.dataset.mode;
         if (!nextMode || nextMode === state.mode) return;
         state.mode = nextMode;
-        state.view = state.mode === "explain" ? "clean" : state.view;
+        state.view = isGenerationMode(state.mode) ? "clean" : state.view;
         postToHost({ type: "mode", mode: state.mode });
         if (state.sourceText.trim()) {
           triggerRecheck();

@@ -80,7 +80,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       latencyEl.textContent = `⚡ ${response.latencyMs}ms`;
       copyBtn.style.display = "inline-flex";
 
-      renderDiff(response.originalText, response.resultText, outputEl);
+      // For generation modes (draft, reply), show clean text preview without red/green diffs
+      if (currentMode === "draft" || currentMode === "reply" || currentMode === "explain") {
+        outputEl.innerHTML = escapeHtml(response.resultText);
+      } else {
+        renderDiff(response.originalText, response.resultText, outputEl);
+      }
     });
   }
 

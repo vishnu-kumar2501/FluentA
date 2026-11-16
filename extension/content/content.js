@@ -178,11 +178,13 @@
       min-height: 100px;
       max-height: 240px;
       overflow-y: auto;
+      overflow-x: hidden;
       font-size: 13.5px;
       line-height: 1.6;
       color: #f1f5f9;
       background: rgba(13, 18, 29, 0.6);
       word-break: break-word;
+      white-space: pre-wrap;
     }
 
     .fluenta-loading {
@@ -534,8 +536,12 @@
       currentResultText = response.resultText;
       shadow.getElementById("fluenta-latency").textContent = `⚡ ${response.latencyMs}ms`;
 
-      // Render Word Diff
-      renderDiff(response.originalText, response.resultText, body);
+      // For generation modes (draft, reply, explain), show clean formatted text
+      if (mode === "draft" || mode === "reply" || mode === "explain") {
+        body.innerHTML = escapeHtml(response.resultText);
+      } else {
+        renderDiff(response.originalText, response.resultText, body);
+      }
     });
   }
 
